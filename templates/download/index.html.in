@@ -1,0 +1,18 @@
+#define Title "3proxy :: download"
+#include "../include/intro.html"
+
+Do you like 3proxy? You can donate in bitcoins: <A href="bitcoin:1BFYgmikjfUXzaPRwFDkR25oebBBPvpzj8">1BFYgmikjfUXzaPRwFDkR25oebBBPvpzj8</A>, or in <a href="/donations/">any other</a> form.
+
+<h2>Download 3proxy tiny free proxy</h3>
+<ul>
+<li><a href="stable/">Stable version</a></li>
+<li><a href="devel/">Development version</a></li>
+<li>GIT: <A href="https://github.com/3proxy/3proxy">https://github.com/3proxy/3proxy</A></li>
+<li>Archive of older versions: <A HREF="https://github.com/z3APA3A/3proxy-archive">https://github.com/z3APA3A/3proxy-archive</A></li>
+<li>See also: <A HREF="/plugins/">Plugins and extensions</A></li>
+</ul>
+<P>
+ There are no currently 3proxy port maintainers for different distributions. 
+ If you want to become port maintainer please contact 3proxy@3proxy.ru.
+
+#include "../include/postpage.html"

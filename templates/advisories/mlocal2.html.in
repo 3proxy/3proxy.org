@@ -1,0 +1,110 @@
+#define Title "Advisories : mailbox format incompatibility in WUimap with mail.local"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+  Title         :   mailbox format incompatibility in (WU)imap with
+                    mail.local
+  Authors       :   3APA3A@security.nnov.ru, agk@sandy.ru
+  Impact        :   malicious user can put message with faked headers
+                    in  user's  mailbox  bypassing  virus  protection,
+                    buffer  overflow  protection  and  another MTA/MDA
+                    filters.  Also imap itself or MUA can be DoS'ed by
+                    the way shown below.
+  Software      :   imapd-4.7c and prior versions then combined with
+                    mail.local and probably some another MDAs
+  OS            :   *BSD, may be others
+  Vendor Status :   Mark Crispin and Sendmail notified, solution was
+		    provided by Sendmail.
+                    
+
+  Details:
+
+  Then  delivering message to user's mailbox mail.local believes, that
+  messages  are delimited by empty line followed by "From " header. If
+  this combination found in message text it will be commented out. Yet
+  imap,  while parsing user's mailbox relies only on "From " header in
+  special  format and doesn't check empty line. This makes it possible
+  to  put  faked  message  with  faked  RFC-822  header (including all
+  Received: fields) in user's mailbox using properly formatted "From "
+  header  after  non-empty  line.  This  can  be used both for sending
+  spoofed  messages  and  DoS'ing  user's  mailbox by emulating a huge
+  number of messages.
+
+  Exploitation:
+
+  Shell  string  below  send  a  single  approx. 2.5 Mb message. After
+  delivering  imap  will  think  there is more then 70,000 messages in
+  user's mailbox.
+
+perl -e 'print "1\nFrom user Wed Dec  2 05:53:22 1992\n\n"x70000' |\
+mail -s "Oooops I did it again" victim
+
+  Then  this  70,000 messages are received with MUA, MUA usually fails
+  (mostly  because  of  memory problems). Was tested with The Bat! and
+  Netscape.  After  that  on FreeBSD 3.2 PIII 128Mb box I noticed next
+  behavior:  ipop3  (imapd  was  not  tested) freezes in sbwait state,
+  locking  99%  CPU  and amount of memory (much more then message size
+  itself). After 30 minutes situation has not changed.
+
+  Workaround (Patch):
+
+  One  is for imapd-4.7c. It was not excessively tested and may be not
+  complete, but believed to close this very hole.
+
+*** unix.c.old  Wed Feb 23 03:43:30 2000
+--- unix.c      Thu Aug 10 12:58:19 2000                                      
+***************
+*** 1048,1053 ****                                                           
+--- 1048,1054 ----                                                           
+    unsigned long i,j,k,m;                                                   
+    char c,*s,*t,*u,tmp[MAILTMPLEN],date[30];                                
+    int ti = 0,pseudoseen = NIL,retain = T;                                  
++   int wasempty;                                                            
+    unsigned long nmsgs = stream-&gt;nmsgs;                                     
+    unsigned long prevuid = nmsgs ? mail_elt (stream,nmsgs)-&gt;private.uid : 0;
+    unsigned long recent = stream-&gt;recent;                                   
+***************                                                              
+*** 1389,1404 ****                                                           
+        k = m = 0;              /* no previous line size yet */              
+                                /* note current position */                  
+        j = LOCAL-&gt;filesize + GETPOS (&bs);                                  
+        if (i) do {             /* look for next message */                  
+          s = unix_mbxline (stream,&bs,&i);                                  
+          if (i) {              /* got new data? */                          
+!           VALID (s,t,ti,zn);  /* yes, parse line */                        
+            if (!ti) {          /* not a header line, add it to message */   
+              elt-&gt;rfc822_size +=                                            
+                k = i + (m = (((i &lt; 2) || s[i - 2] != '\r') ? 1 : 0));       
+                                /* update current position */                
+              j = LOCAL-&gt;filesize + GETPOS (&bs);                            
+            }                                                                
+          }                                                                  
+        } while (i && !ti);     /* until found a header */                   
+        elt-&gt;private.msg.text.text.size = j -                                
+--- 1390,1408 ----                                                           
+        k = m = 0;              /* no previous line size yet */              
+                                /* note current position */                  
+        j = LOCAL-&gt;filesize + GETPOS (&bs);                                  
++       wasempty = 1;                                                        
+        if (i) do {             /* look for next message */                  
+          s = unix_mbxline (stream,&bs,&i);                                  
+          if (i) {              /* got new data? */                          
+!           if (wasempty) VALID (s,t,ti,zn);    /* yes, parse line */        
+            if (!ti) {          /* not a header line, add it to message */   
+              elt-&gt;rfc822_size +=                                            
+                k = i + (m = (((i &lt; 2) || s[i - 2] != '\r') ? 1 : 0));       
+                                /* update current position */                
+              j = LOCAL-&gt;filesize + GETPOS (&bs);                            
+            }                                                                
++           if ( *s == '\n') wasempty = 1;                                   
++           else wasempty = 0;                                               
+          }                                                                  
+        } while (i && !ti);     /* until found a header */                   
+        elt-&gt;private.msg.text.text.size = j -
+
+  Solution:
+
+  In fact, Sendmail decided this problem should be fixed in mail.local. 
+  Download latest sendmail distribution.
+</font></pre>
+#include "../include/postpage.html"

@@ -1,0 +1,107 @@
+#define Title "Advisories : Directory traversal and path globbing in multiple archivers"
+#include "../include/intro.html"
+
+<pre><font class="fixed">
+
+Topic:                    Directory traversal and path globbing in
+                          multiple archivers
+Author:                   3APA3A &lt;3APA3A@security.nnov.ru&gt;
+Affected Software:        GNU tar &lt;= 1.13.19, Info-Zip UnZip &lt;= 5.42,
+                          RARSoft rar &lt;= 2.02, PKWare pkzipc &lt;= 4.00
+Not affected:             rar 2.80, WinZIP 8.0
+Risk:                     low/average
+Released:                 July, 2, 2001
+SECURITY.NNOV advisories: http://security.nnov.ru/advisories
+
+Background:
+
+Archive  extraction  is  usually  treated  by users as safe operation.
+There are a lot of problem with files extraction though.
+
+Problem(s):
+
+Among  them:  huge  files with high compression ratio are able to fill
+memory/disk  (see  "Antivirus scanner DoS with zip archives" thread on
+Vuln-Dev),  special device names and special characters in file names,
+directory  traversal  (dot-dot  bug). Probably, directory traversal is
+most  dangerous  among  this  bugs, because it allows to craft archive
+which  will  trojan  system  on  extraction. This problem is known for
+software  developers,  and  newer  archivers usually have some kind of
+protection.  But  in  some  cases  this  protection is weak and can be
+bypassed  though. I did very quick (approx. 30 minutes, so may be I've
+missed  something)  researches  on  few popular archivers. Results are
+below.
+
+Detailed info:
+
+GNU tar (all platforms):
+
+ tar  below  1.13.19  including  latest  releases  has  no any ".." or
+ absolute  path  protection.  Tar development team was contacted. They
+ replied  they're  aware  of  problem  and current development version
+ 1.13.19  implements  some  kind of protection but it doesn't work for
+ most  cases  due  to  bug in coding. Exploitation scenario was passed
+ back  to  development  team. I hope it will work then 1.13.19 will be
+ finally  released.  See  attached  patch (<A style="fixed" HREF="/files/archive/tar-1.13.19.patch">tar-1.13.19.patch</A>). 1.13.19
+ sources can be obtained from ftp://alpha.gnu.org/gnu/tar/
+
+Info-Zip's UnZip (all platforms):
+
+ all  versions  have no both .. and absolute path protection. No reply
+ from vendor. See attached patch (<A style="fixed" HREF="/files/archive/unzip-5.42.patch">unzip-5.42.patch</A>).
+
+PKWare's PKZip (Windows):
+
+ console  version was tested. It's vulnerable, if archive is extracted
+ with  -rec (recursive) option. If this option is not given archive is
+ extracted without directory structure. All versions up to latest 4.00
+ are  vulnerable.  Program  is shareware, no sources available. Vendor
+ contacted, still in work. Status of patch unknown.
+
+RARsoft (Eugene Roshal's) RAR (all platforms):
+
+ Directory  traversal  protection  was  implemented  in rar 2.02. This
+ protection  can  be bypassed. Eugene Roshal was contacted and replied
+ latest  version of rar (2.80) is absolutely safe. It's true, but 2.02
+ is latest available version in most Unix ports (2.80 is available for
+ Windows  and Linux, you can use Linux version if your system supports
+ Linux  emulation). Program is shareware, no sources available. Status
+ of patch unknown.
+
+WinZip (Windows):
+
+ Behavior  is  close  to  ideal. Console version doesn't extract files
+ with  ".."  until  special  switch  is not selected, windowed version
+ warns user on ".." about possible impacts of such extraction.
+
+Exploitation:
+
+ Under Windows exploitation is trivial. On most unix system you should
+ guess  level  of directory file will be extracted to. tar and rar are
+ able  to  create files with permission different from umask, it makes
+ it  possible  to create executables. Only tar overwrites target files
+ without prompt by default.
+
+ attached files create test.txt level higher than specified by user.
+
+ tar &lt; 1.13.19 :  tar -xf <A style="fixed" HREF="/files/archive/test.tar">test.tar</A>
+ tar &lt;= 1.13.19:  tar -xf <A style="fixed" HREF="/files/archive/test2.tar">test2.tar</A>
+ pkzipc &lt;= 4.00:  pkzipc -extr -rec <A style="fixed" HREF="/files/archive/test.zip">test.zip</A>
+ UnZip &lt;= 5.42 :  unzip <A style="fixed" HREF="/files/archive/test.zip">test.zip</A>
+ rar &lt;= 2.02   :  rar x <A style="fixed" HREF="/files/archive/test.rar">test.rar</A>
+
+Workaround:
+
+ List  content  of  archive  before extraction if archive was obtained
+ from untrusted source. Never automate archive extraction, or use jail
+ if  you  need automation. Be sure never run extraction from user with
+ elevated privileges.
+
+Solution:
+
+ Wait  for  vendor  patch  or  use checked archivers or apply attached
+ patches on your own risk.
+
+</pre></font>
+
+#include "../include/postpage.html"

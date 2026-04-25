@@ -1,0 +1,109 @@
+#define Title "Advisories : File locking and security"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+Topic                   : File locking and security
+Author                  : 3APA3A &lt;3APA3A@security.nnov.ru&gt;
+Affected software       : Windows NT 4.0, Windows 2000 and may be
+                          another systems
+Exploitable             : Yes
+Remotely exploitable    : No
+Category                : Design flaw
+
+Background:
+
+Application  can  lock  the  file  after  file  description  is  open by
+application  (or  in  open() call itself). Usually there are 2 modes for
+locking  -  SHARE  and  EXCLUSIVE  locks.  Only  one application can put
+EXCLUSIVE lock on file. If file is locked exclusively no lock can be put
+on  file by another process (we will not consider a case of parent/child
+processes). The main problem of file locking is this mechanism (at least
+on  tested  systems  -  *BSD,  Windows NT, Linux) doesn't check any file
+permission  or  the  mode  the  file is open before locking. It makes it
+possible  for  application  with read-only access to the file to lock it
+exclusively.
+
+The way file locks interfere with file access depends on OS. There are 2
+possible  situations:  moderate  and  non-moderate  file locks. *BSD and
+linux  use  non-moderate  locking, while Windows NT locking is moderate.
+What  does it mean? Under Unix file locking is only checked then another
+application  tries  to  lock  the  file. If application doesn't use file
+locking  it  will  not be affected by file locking. Under Windows things
+are  different.  If  one  application exclusively locks the file another
+application  can't access this file even if it doesn't tries to lock the
+file.  It should be treated as a design flaw, because insecure in nature
+mechanism  of  file  locking  interacts  with  secure  mechanism of file
+access.
+
+Resume:
+
+Security  aware  application  should  correctly process the situation of
+locked  file. Application should not rely on ability to lock (or in case
+of Windows on ability to access) publicly readable files.
+
+Problem:
+
+Many  security-critical  mechanism  under  Windows (I am not aware about
+Unix  ones,  but  it  doesn't mean that only Windows is affected) can be
+DoS'ed by file locking.
+
+Details:
+
+For unprivileged user
+
+1.  It's possible to stop security policies by locking security policies
+files on domain controllers
+2.   It's   possible  to lock screensaver file to prevent workstation to
+be locked by another user
+3. It's possible to deny access to administrative utilities and/or batch
+jobs from running by administrator or system
+4. It's possible to deny another user's logon in many ways
+5. It's possible to deny access to shared programs, documents, etc...
+...
+
+Workaround:
+
+It's  not  a  bug to be patched. You can always find a user who locked a
+file.
+
+Vendor:
+
+Microsoft  was  contacted on September, 7 2001. Last reply on this issue
+was on October, 13.
+
+-=-=- "Microsoft Security Response Center" &ltsecure@microsoft.com&gt; -=-=-
+
+Wanted to get together and let you know what we've found out and the
+plan moving forward.  You're right that it's possible for someone to
+block group policy by locking a file.  We've considered quite a few
+different options for preventing someone from putting a lock on the
+file, but so far all of them would require fairly massive changes to the
+system architecture, and we're very leery of making such drastic changes
+via a patch.  
+
+I'd like to propose a different solution, and see what your reaction
+would be.  We currently have an auditing event that occurs when group
+policy fails to be applied for any reason.  The description of the error
+isn't as clear as it could be, and we'd propose making the error message
+much more descriptive and useful to the administrator.  Also, we'd
+propose that anytime group policy can't be applied, a pop-up would
+appear on the client machine, describing the problem and instructing the
+user to contact the system administrator.  Clearly, if an attacker saw
+the error message, he wouldn't call the administrator -- but one of the
+other users on the system would.  The administrator could then check the
+error log, find out who had locked the file, and take appropriate action
+against them.
+
+-=-=-=-=-=-=-=-=-
+
+Of  cause,  it's  "security  through obscurity", but I believe that's best
+that can be done in this situation.
+
+Testing:
+
+You   can   use   attached   <A HREF="/files/locktest.c">locktest.c</a>   (for   compiled   version  see 
+<A HREF="/files/locktest.exe">locktest.exe</a>)
+
+</pre></font>
+
+#include "../include/postpage.html"

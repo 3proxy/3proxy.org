@@ -1,0 +1,69 @@
+#define Title "Articles:Uninet:Workstation"
+#include "../../include/intro.html"
+<pre><font class="fixed">
+Now, let  me give you one more fact: the protection is more effective if
+it's  closer  to user. For example, antiviral program on user's computer
+has  more  chances  to  catch  malware,  because  virus hidden in e-mail
+message  may  be  caught  then  attachment  will be saved to disk before
+execution. That's why it's important to have antiviral protection in all
+possible   points:   firewalls,   e-mail   servers,  file  servers  and
+workstations.  But  any antiviral protection still gives no guarantee to
+protect you against specially crafted or new malware.
+
+Can  we  do  attachment filtering on workstation? Of cause we can and we
+should.  Attachment  filtering  by  the  means of MUA is most efficient,
+because  there  is no situation possible you have an attachment and this
+attachment  will not be detected by filter. Many MUAs have an ability to
+hide  specified  types  of  attachments  from  user (from example latest
+versions  of  The  Bat!  and  Microsoft Outlook with security update fix
+disable  some  kind  of  attachments  - like .scr or .pif - by default).
+Securing user by the means of his MUA is very important. You may want to
+make  a  most  restrictive  settings. For example it's very important to
+keep  all  incoming  mail  in  restricted sites zone for Outlook/Outlook
+Express,  and  it's  nice  to disable _all_ active content for this zone
+(including  safe ActiveX components enabled by default). You may use MUA
+integrated  software to check content (there are multiple extensions for
+Outlook,  including  Russ Cooper's NoHTML to transform all incoming HTML
+messages to plain or RTF text format).
+
+Remember,  that usually you needn't to visit every user's workstation to
+do  a  uniform settings - in case of Windows all registry and file based
+settings  can  be  done  by the means of group policy and logon scripts.
+.ADM policy templates is a very powerful tool for administration.
+
+There is still a possibility that after all these measures there's still
+a  way  to  bypass  your  protection  and  your user will get a trojaned
+attachment.  Of  cause  he will launch it and it will not be detected by
+antiviral  software  you  use.  Will this trojan be executed? No, if you
+know  something  about windows security. You may think that I mean group
+policy  to only allow user to run specified application, and it's really
+weak protection and it may be bypassed. No, I mean file permissions.
+
+After you click some file attached to message this file usually saved to
+predefined   directory   (...\TEMP,  ...\Temporary  Internet  Files\...,
+...\attachments\...,  ...\cache\...,  etc depending on MUA you use). For
+what hell user may need to have an execute permissions for files in this
+directories??  He  needn't.  And a good practice is to set "Deny execute
+files"  or  to  remove  "execute  files" special permission for all this
+directories . It will also stop users from running different installers,
+because  installer  normally  extracts files to TEMP folder and launches
+setup  from  TEMP folder (another protection from installers is removing
+WOW  or  NTVDM  if  not  required,  because  many  installers  are Win16
+applications).  Additionally you may want to give only "add" and execute
+for  folders  permission to user and to give ability to modify or delete
+files  and folders for Creator Owner to eliminate situation one user can
+read   temporary   files   of   another  user.  I  have  evaluated  this
+configuration  in  few networks with excellent results. Windows 95/98/ME
+should NEVER be used in corporate network.
+
+Of cause, it's needless to say how important is applying security fixes,
+patches,  etc  to  client  computer:  I saw a lot of organizations where
+servers  were maintained at highest level while there was no even policy
+for testing and applying hotfixes to workstation. Hotfixes, patches, etc
+are   sometimes   only   protection  against  software  vulnerabilities
+(specially  in  case  of code execution holes there attached file is not
+required, like in case of "Buffer overflow in mshtml.dll"
+http://www.security.nnov.ru/search/news.asp?binid=1782).
+</pre></font>
+
+#include "../../include/postpage.html"

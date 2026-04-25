@@ -1,0 +1,412 @@
+#define Title "Articles: Firewalls for local network"
+#include "../../include/intro.html"
+<table width="100%"><tr><td bgcolor="white">
+<P ALIGN=LEFT STYLE="margin-top: 0.42cm; margin-bottom: 0.11cm">
+<FONT FACE="Arial Black, sans-serif"><FONT SIZE=6><B>Firewalls for
+local network</B></FONT></FONT></P>
+<P ALIGN=RIGHT STYLE="margin-top: 0.49cm; margin-bottom: 0.49cm">
+<FONT SIZE=1 STYLE="font-size: 8pt"><B>Sergey V.
+Gordeychik,&nbsp;<A href="mailto:gordey@itsecurity.ru">gordey@itsecurity.ru</A></B></FONT></P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm"><FONT FACE="Arial Black, sans-serif"><FONT SIZE=2 STYLE="font-size: 11pt"><I>Installation
+of a firewall is the basic requirement for building a secured
+network. Years of their existence made firewalls more functional and
+more secured and developed them from simple packet filters into
+devices with possibility of stateful and content filtering. But all
+of them can control only perimeter of network, not the LAN.</I></FONT></FONT></P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Nowadays the principal security mechanism of a firewall is traffic
+filtering. Firewall must meet our requirements and be capable to
+analyze and manage packets, coming through its interfaces according
+to the security policy. So, if a packet matches the ruleset, it will
+be translated, otherwise rejected. Different types of firewalls
+depend on their depth of filtering and filtration criteria. For
+example, a simple packet filter treats each packet separately and
+uses headers of network and transport layers as filtration criteria;
+mail content filtering system can gather all the e-mails content from
+different packets and examine not only headers of the application
+layer protocol (SMTP), but also data translated in these e-mails
+according to the security policy.</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Firewalls are located at a network perimeter e.g. at access points,
+where local network is connected to other networks for business
+needs. Network perimeter is called an access point because external
+networks are not trusted resources; they have different security
+policies and are managed by different people. As usual such an access
+point is a connection to the Internet. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Development of the &ldquo;defense in depth&rdquo; concept in
+information security made the meaning of &ldquo;network perimeter&rdquo;
+almost transparent. Nowadays, network perimeter also means an access
+point between two segments of the corporate network, VPN gateways,
+wireless segments and even a network card, which connects a PC to
+local area network.</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+The need to keep resources safe from internal and external users (who
+can access these resources from local workstations) made the local
+network security of great importance. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+A traffic filtering in a local segment makes it possible to secure
+network from attacks on unused or misconfigured network services, to
+control the activity of network worms and to block illegal users`
+actions, such as creation of network shares, installation and use of
+network services. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Lots of firewalls are not suitable for traffic filtering in a local
+network, but there are some ways to solve this problem. 
+</P>
+<H2>Segmentation</H2>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+This way could be used, when there is a need to divide network into
+servers` and users` segments. In this case, firewall inspects traffic
+between client computers and servers. Besides common problems,
+connected with rebuilding network topology and changing IP addresses,
+it will not be possible to control traffic inside a segment. This
+means, that vulnerability of one of the servers may allow an attacker
+to bypass firewall restrictions and gain access to other servers in
+this segment. The same is valid for users` segment.</P>
+<H2>Traffic filtering and switches</H2>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+As switches are the basis for modern local
+networks building the possibility of traffic filtering by the very
+devices would be a solution for the administrator. But most filtering
+models are bound by data-link layer, for instance by possibility of
+binding MAC addresses to special interfaces.</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Some switches support traffic filtration on
+different layers of the OSI model. For example, Cisco Catalyst
+starting with 3550 can bind inbound access lists to switched ports
+and inspect packets on the third and the fourth layer of the OSI
+model &ndash; IP/TCP/UDP protocols. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+More powerful devices such as Firewall Services
+Module (FWSM) for Cisco Catalyst 6500 Series make possible to create
+filtration rules on all the OSI layers, including application layer.</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+The main disadvantage of traffic filtering on switches is their high
+price. But hopefully in the nearest future traffic filtration
+capabilities will be build-in also into simple devices.</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Besides it appears to be very difficult to manage a distributed
+system when different filtering rules are applied to different ports
+on different switches. A balancing factor is the absence of the
+necessity to use complicated rules of filtering on the switches of
+lower level. It is sufficient to allow transferring packets outside
+the local network (into the Servers` segment and other segments of
+the network) and deny the remaining traffic. A more detailed
+filtering will be performed on the boundaries of network segments. 
+</P>
+<H2>Traffic filtering and bridging</H2>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Recently network bridges, executing functions of
+bridging firewalls, have become increasingly popular. Filtering
+bridge receives packets at one of network interfaces, and not only
+repeats it but also checks it with the help of packet filter. The
+most popular solution is a filtering network bridge based on IPtables
+(<A HREF="http://bridge.sourceforge.net/docs/Firewalling for Free.pdf">http://bridge.sourceforge.net/docs/Firewalling%20for%20Free.pdf</A>).
+
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+These devices do not differ much from common firewalls but make it
+possible to filter the network traffic without the change of network
+structure. But the problem of insecurity remains.</P>
+<H2>Personal firewalls</H2>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+The most effective solution of traffic filtering
+inside local network area is installation and corresponding
+configuration of a personal firewall on each computer.</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+A personal firewall filters network activity of
+each computer according to the existing policy and allows
+interactions only with services, servers and clients that are needed
+for solving tasks of the employer. This approach helps to control
+access to the network services and make the network more secure. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+But there exist some problems connected with this solution and which
+could lower the entire security level. A personal firewall could be
+deleted by a user, disconnected by a virus or there a denial of
+service condition because of a fault in software may occur. Besides
+the use of a personal firewall doesn&rsquo;t defend from malicious
+activity of users who have connected his laptop to the network. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+A serious problem is reconfiguration of a
+&ldquo;distributed&rdquo; firewall. For instance, if the traffic
+filtering is being performed with the help of IPSec and is being
+managed through the Group Policy, any change in filtering rules made
+by an administrator may take a long period of time to be distributed
+over the network. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+An administrator can make mistakes in configuration of personal
+firewalls, e.g. he can block user&rsquo;s interaction with a Domain
+Controller, or Central Management System. These actions may have
+serious impact. 
+</P>
+<H2>The use of Intrusion Detection
+Systems</H2>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+To reduce the enumerated disadvantages of personal
+firewalls it is possible to use Network Intrusion Detection Systems
+(NIDS). A lot of such software can block TCP session according to
+different parameters that do not satisfy the local security policy. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+To block TCP connection it is enough to know the
+IP address and TCP port numbers of a sender and receiver and current
+sequence number of a TCP session. NDIS has
+such information because it listens all the connections of a separate
+network and can terminate TCP connections coming through the
+controlled segment:</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P align="center">
+<img src="image-1.png" border="0" align="center">
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<FONT FACE="Arial Narrow, sans-serif">
+<I>Picture 1. LANFirewall &ldquo;in action&rdquo;</I></FONT></P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+1. A malicious user sends a connection request disabled by the
+security policy.</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+2. NDIS receives the request from the mirrored port of the switch.</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+3. NDIS send RST packets to receiver and sender.</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+The use of this feature makes it possible to describe allowed traffic
+in local network and send RST packet to all other TCP connections. In
+this case an attempt to use unauthorized TCP connection will result
+for the user in receiving an RST packet and information about
+unexpected session termination. We do not forbid installation of
+different services, but it will only be possible to use them at local
+computer. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+For protocols, which do not need established
+connection (UDP, ICMP) we send ICMP
+Destination
+Unreachable and ICMP
+Port Unreachable.
+Besides, information about these connections will be logged. 
+</P>
+<H2>Implementation</H2>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Let&rsquo;s discuss implementation of such a
+solution for traffic filtering in a small local network. The network
+is based on Microsoft products and consists of 2 Domain Controllers,
+an Exchange Server, several File and print Servers, a firewall, WEB
+and SQL Servers. (See
+picture 2)</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<p>
+<img src="image-2.png" border="0" align="center">
+</p>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<FONT FACE="Arial Narrow, sans-serif">
+<I>Picture 2. Scheme of network to be secured</I></FONT></P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Before the system configuration it is necessary to
+determine the traffic filtering policy, e.g. we should single out
+which servers and protocols will be allowed. The policy must be based
+on functionality and tasks of each server. Network
+monitor (sniffer)
+could be a useful tool at
+this stage.
+
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+The main problem in realization of this solution
+is connected with software that opens several independent connections
+and uses dynamic sockets. The most important Windows based network
+service which uses dynamic sockets is RPC. Unfortunately modern IDS
+don&rsquo;t own a powerful RPC preprocessor to identify different RPC
+applications. That&rsquo;s why we should use another method. The
+easiest way is to bind an RPC services to a static port numbers.
+Security Configuration Manager would be the best solution but its
+editor doesn&rsquo;t correctly process adding a new registry
+parameter which contains a symbol &ldquo;/&rdquo;.
+An alternate way to bind RPC services to static port numbers is the
+use of administrative templates (.adm files). An example of such a
+file to configure services at Exchange server and Domain Controllers
+is shown below.</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<A HREF="rpcpm.adm.txt" target="src">rpcpm.adm file</A></P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+This file should be added to administrative
+templates with the help of the Group Policy editor (Computer
+Configuration &ndash; Administrative Template &ndash; Add/Remove
+Template). You won&rsquo;t see template parameters by default because
+they are located behind HKLM\Software
+registry keys. To configure template parameters you&rsquo;ll need to
+turn off &ldquo;Show Policies
+Only&rdquo; in the &ldquo;View&rdquo; menu.
+On Windows 2003 Server you&rsquo;ll need to open View-&gt;Filtering
+and turn off &ldquo;Only show
+policy settings
+that can
+be fully
+managed&rdquo;. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+The next stage is to choose the method of passing traffic from local
+segment to your IDS. As the network is based on switches, frames are
+transported only between the sender and receiver of a packet. It is
+necessary to change the routes of packets and make them pass through
+the IDS network interface. Taps, hubs and span ports can be used for
+this reason. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+As an NIDS we use free intrusion detection system
+called Snort (<A HREF="http://www.snort.org/">www.snort.org</A>).
+This system was designed for Unix based systems (though there are
+also Windows implementations) and we use Linux as a basic operating
+system for Snort. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Actually it is possible to use any of commercial intrusion detection
+systems for these tasks but it would be much better to use one for
+monitoring malicious activity in allowed traffic. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Snort must
+be compiled
+with Flexible
+Response functionality to be able to
+terminate sessions. For this purpose it is necessary to have libdnet
+library installed at your system.</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-bottom: 0cm">
+<FONT FACE="Bitstream Vera Sans Mono, Lucida Console, monospace"><FONT SIZE=2 STYLE="font-size: 9pt"><B>#
+./configure --enable-flexresp</B></FONT></FONT></P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Then snort through snort.conf
+is configured.</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<A HREF="snort.conf.txt" target="src">Snort.conf file</A>.</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Section 1 describes variables such as file path,
+IP addresses of internal and external networks. Section 2 includes
+preprocessors for collecting fragmented packets and sessions. Section
+3 describes the order to process IDS rules. In section 4 will be
+attached the permit.rules
+file, containing rules for traffic filtering is attached. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<a target="src" href="permit.rules.txt">Permit.rules file</A></P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Section 1 of the permit.rules
+files describes IP addresses of servers according to their role in
+corporate network. Servers could be members of different groups. For
+instance, FILESRV group includes also Domain Controllers which use
+shared folders for storing Group Policy, and Database Servers in case
+they support Named Pipes network library. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Section 2 consists of filters, which describe
+allowed traffic. The filter starts with a keyword <I>pass, </I>contains
+network address and port number of sender and receiver of the packet.
+In our example it is allowed to use TCP and UDP for different
+interactions, but we advise not to use UDP because of its
+unreliability. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+The ruleset for DNS protocol describes connection
+with DNS clients in network and also queries sent by DNS servers to
+firewall to allow Internet names and addresses resolution. All the
+rules for other protocols are described in a similar way. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+In the Exchange section we allow interactions
+between clients and Exchange services (RFR,
+NSPI, Information
+Store). These services were bound to static
+ports (2000, 2001, 2002)
+with the help of administrative template. Filters for
+CIFS/SMB/NetBIOS
+services describe traffic in the network between clients and File and
+print Servers. In this case NetBIOS traffic is allowed, but if there
+is no old client software it is recommended not to use this protocol.
+
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Section 3 describes traffic which should not be filtered. These are
+interactions between Domain Controllers and Exchange. 
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Section 4 terminates sessions which were not permitted in section 3.</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+The IDS must be started with &ndash;o option which makes it necessary
+to follow the order of application of rules in the configuration
+file. To start IDS as a daemon you should use &ndash;D option. In
+most cases the startup option would be as follows:</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-bottom: 0cm"><FONT FACE="Bitstream Vera Sans Mono, Lucida Console, monospace"><FONT SIZE=2 STYLE="font-size: 9pt"><B>#
+snort &ndash;c /etc/snort/snort.conf &ndash;o &ndash;D </B></FONT></FONT>
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+<BR><BR>
+</P>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+Information about policy filtering violation will
+be logged into /var/log/snort/alert.</P>
+<H2>Conclusion</H2>
+<P STYLE="margin-top: 0.11cm; margin-bottom: 0.11cm">
+The offered solution is a not full-fledged
+substitution of traditional means of network traffic filtering, but
+it can be used alongside with them executing the function detective
+security control. Besides installation and configuration of such a
+solution appears much easier if the intrusion detection system has
+already been implemented into the network as there appears a
+possibility of the use of already existing network infrastructure. 
+</P>
+</td></tr></table>
+
+#include "../../include/postpage.html"

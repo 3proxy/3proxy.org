@@ -1,0 +1,136 @@
+#define Title "Articles:Uninet:Risks"
+#include "../../include/intro.html"
+<pre><font class="fixed">
+Now, let me introduce attacks being discussed:
+ 1. Internet Worms and virii.
+ 2. Trojan content attacks.
+ 3. Vulnerability exploitation attacks.
+ 4. Information gathering attacks.
+ 5. Address spoofing attacks.
+ 6. Social Engineering attacks.
+ 7. Denial of Service attacks.
+Lets explain every of this groups.
+
+Worms and virii.
+
+First,  catch  the  difference  between  worm  and  virii. Internet worm
+usually  tries  to reproduce itself via Network. Usually worm comes with
+standalone  message  while virus infect some useful file you may need to
+receive. That's why worms usually may be safely filtered without warning
+to  end  user, while files infected by virus normally require user to be
+notified.  Of cause you may think that antiviral products should be used
+to stop worms and virii. Few questions about antiviral products are:
+
+1. Does antiviral product guarantee protection for you?
+
+Answer  is:  NO. Antivirus can only guarantee that known virus or worm
+will  be caught. Even if you update you virus bases daily it may pass 48
+hours between worm will be in-the-wild and your antivirus may catch this
+worm.
+
+2. Should you use antiviral products?
+
+Answer  is  YES.  They will help you to identifying malware content is
+worm  or  virii and to disinfect infected files. There is one good thing
+in  virii  and worms: they are known to be a good security indicator. If
+your  network  can be successfully attacked with worm it may be attacked
+be anyone. No more discussing virii and worms in this paper.
+
+Trojan content.
+
+We  can  subdivide  trojans  into  2  groups: public trojans and private
+trojans.  Public  one  can be found on all these 3uPerM3G4H4xO2 websites
+:)  It  can  be  used by scriptkiddie to get your dialup, e-mail or ICQ
+password. In enterprise you should expect private trojan, that is trojan
+never  detected  by  any antiviral software and may be specially written
+for  you.  After  installation  trojan  may  perform  any actions: steal
+passwords,  send  keystrokes  back  to  master  or  perform any master's
+command.  If  computer  has  no  access  to internet trojan may wait for
+commands  in  e-mail  message.  Such message may look, for example, like
+usual spam with attached gif.
+
+Vulnerability exploitation attacks.
+
+Any  program has bugs. Some of these bugs are security related. Attacker
+can  use these bugs to put MUA software into performing some actions and
+may  be to get a control over user's machine. Vulnerability exploitation
+may  be  combined  with  trojan  content  to  make this content executed
+automatically  without  user's  intervention.  You  can  find  a  lot of
+exploitation  scenarios  for  Microsoft  Outlook  Express  or  Microsoft
+Outlook. But don't believe that holes are only in Microsoft products.
+
+Information gathering attacks.
+
+The aim of information gathering attack is to make mail software to "call
+back" to attacker bringing information about user and his job functions,
+software used, system and network configuration. How this can be
+obtained?
+
+  Embedding  elements  from outside sources into e-mail or making MUA to
+  launch browser and visit some site where user will be registered.
+
+Example  is  image  embedded  into  HTML messages and located on outside
+server.  This  easy  trick  in  most  cases allows to discover operation
+system,  MUA version and in some cases details about user's mailbox, for
+example  user's  login  and  physical location of mailbox (see "Netscape
+4.7x information retrival" article on
+
+http://www.security.nnov.ru/advisories/netscape1.asp
+
+  Tricking software into sending reply.
+
+Reply  message  will  help attacker to discover OS, software and in many
+cases  user's  occupation.  For example try to spam some organization on
+Easter  holidays  -  you'll  get a lot of data about it's organizational
+structure :).
+
+Address spoofing attacks.
+
+An example of address spoofing attack can be found in "Microsoft Outlook
+Express address book vulnerability",
+
+http://www.security.nnov.ru/advisories/msoeab1.asp
+
+But  in  many situation it's possible to do a nearly same attack without
+exploiting  some  vulnerability by using some social engineering tricks.
+The  purpose  of attack like this is to make user to send information on
+the e-mail different from one he wants to send.
+
+Social Engineering attacks.
+
+I  think  there's no need to explain what social engineering is. In many
+cases  easiest  way to get some private information from user is to fool
+user  into sending this information to you. The target of this attack is
+user, that's why this attack is so hard to detect and protect.
+
+Denial of Service attacks.
+
+Denial  of  service  attack  via e-mail may be subdivided into 3 groups:
+attacks  based  on  software  vulnerabilities, attacks based on software
+misconfiguration  and DoS against user. In fact, DoS is mostly result of
+bad  administration,  even  if  it's  caused by software bug. Most often
+attack  is  mailbobmbing - sending a large amount of e-mails. In my test
+no  MUA  (I've  tested Microsoft products, The Bat! and Mozilla) was not
+able  to  process  mailbox with 100000 messages via POP3. Putting 100000
+messages  into  mailbox  not  always require sending 100000 message over
+Network.  Sometimes  it's  possible  to  do  with  a single message, for
+example see "mailbox format incompatibility in (WU)imap with mail.local"
+and different "unsafe fgets()" attacks in
+
+http://www.security.nnov.ru/advisories/
+
+We  will  divide  attacks into 2 classes: virii, trojans and exploits we
+will  call  active  content attacks  and  Information gathering, address
+spoofing and social engineering we will call passive content attack.
+
+Active  content is content which tries to get control under user's host.
+Passive  content  is one which does not any actions but tricks user into
+doing  it  behalf.  So,  to protect against attack of the first class we
+need  to  secure  our desktop computer, while defense against second one
+lies in defending the user.
+
+It's  bit  harder  to  classify DoS attacks. We will not talk about this
+kind of attacks specially but will back to 'em from time to time.
+</pre></font>
+
+#include "../../include/postpage.html"

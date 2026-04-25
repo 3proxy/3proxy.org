@@ -1,0 +1,48 @@
+#define Title "Advisories:About"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+SECURITY.NNOV is non-profit security team located in
+Nizhny Novgorod, Russia. SECURITY.NNOV was founded in
+August, 1999 by 3APA3A.
+
+Short FAQ below:
+
+Q: Are you hackers?
+A: No. SECURITY.NNOV connects people who are interested in
+   computer security mostly because of their job functions.
+
+Q: Are you bug diggers?
+A: No. All the bugs published by SECURITY.NNOV were discovered
+   during troubleshooting process or internal audit of software.
+
+Q: How many members do you have?
+A: Only few. Staff is changing so on the moment you read it we
+   probably have 1-2 active members :)
+
+Q: I'm software vendor. Can you test my software for bugs?
+A: Yes, if we'll find your software is interesting.
+
+Q: How much it will cost?
+A: Nothing. We are non-profit. But we are open for
+   any kind of sponsorship.
+
+Q: Are you sponsored by someone?
+A: No. We only have free hosting (thanx to <A HREF="http://www.sandy.ru/" target="_empty">Sandy</A>).
+
+Q: Why do you support your site?
+A: We support it because we need it.
+
+Q: What does 3APA3A means?
+A: 3APA3A (should be spelled as ZARAZA) in Russian means 
+   "infection"
+
+Q: Why are you anonymous?
+A: Some of our members are officials for different companies.
+   Sometimes we express opinion different from companie's
+   official position. You can easily find real names on this sites
+   if you are really interested.
+
+</pre></font>
+
+#include "../include/postpage.html"

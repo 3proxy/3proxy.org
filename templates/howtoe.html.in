@@ -1,0 +1,4 @@
+#define Title "Soft:3proxy:HowTo"
+#include "include/intro.html"
+#include "doc/html/howtoe.html"
+#include "include/postpage.html"

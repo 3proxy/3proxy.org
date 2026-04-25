@@ -1,0 +1,25 @@
+#define Title "Advisories : Microsoft Internet Explorer proxy server bypass"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+  Problem:  IE5  doesn't  use  proxy for FTP connection if option
+  "Enable  folder  view  for  FTP  sites"  is  checked. This option is
+  checked by default.
+  Configuration: tested in 2 configurations:
+   1. Windows NT 4.0 wrkst + SP5 + IE5.0
+   2. Windows NT 4.0 wrkst + SP6a + IE5.01
+  both has a problems.
+  There is no problem under SP5 + IE401SP1a
+
+  Description:
+
+   FTP  proxy  address may be  set in browser configuration (or option 
+   "use one proxy for all protocols" is checked), but IE5 doesn't uses
+   the proxy for data connection, but  tries  to use direct connection
+   instead.  Since IE5 uses active ftp mode and couldn't be configures
+   to  use  passive  (that  isn't  good)  this  fact makes problem for
+   firewalling.
+
+</pre></font>
+
+#include "../include/postpage.html"

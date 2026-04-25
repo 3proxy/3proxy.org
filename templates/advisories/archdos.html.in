@@ -1,0 +1,119 @@
+#define Title "Advisories : Special devices access in multiple archivers"
+#include "../include/intro.html"
+
+<pre><font class="fixed">
+
+Topic:                    Special devices access in multiple archivers
+Author:                   3APA3A &lt;3APA3A@security.nnov.ru&gt;
+Platform:                 Windows
+Affected  Software:       WinZIP Computing's WinZIP 8.0, PKWare PkZip
+                          4.0, RARSoft WinRar 2.80
+Risk:                     average
+Released:                 July, 5, 2001
+SECURITY.NNOV advisories: http://security.nnov.ru/advisories
+
+Background:
+
+Archive  extraction  is  usually  treated  by users as safe operation.
+There are a lot of problem with files extraction though.
+
+Problem(s):
+
+Among  them:  huge  files with high compression ratio are able to fill
+memory/disk  (see  "Antivirus scanner DoS with zip archives" thread on
+Vuln-Dev),  special device names and special characters in file names,
+directory traversal (dot-dot bug). All this issues are not new and are
+known to be exploited.
+
+Special  device  access is mostly Windows-specific problem, because in
+Windows  some  of  devices are not located in some specific place, but
+are  placed in every directory (e.g. c:\temp\prn). Also file extension
+is  ignored  (c:\temp\prn.txt  also  refers to special device). Kernel
+mode  drivers can create their own special devices. Special devices in
+Windows  also represent physical disks, tapes, UNC names, and a lot of
+other  devices.  For example, user with administrator's privileges can
+access    physical   disk   (including   MBR)   via   special   device
+\\.\PhysicalDrive#  under  Windows  NT/2000.  This  access can lead to
+system  compromise.  Same  API  functions  are  used to access special
+devices and ordinary files. That's why special device access should be
+treated as very serious and dangerous issue under Windows.
+
+If  during  extraction  archiver  doesn't  check  a  name  and type of
+destination  file (e.g. using GetFileType() API) extracted file can be
+redirected to special device on archive creator's choice.
+
+Detailed info:
+
+ WinZip 8.0:
+
+ WinZip   is  vulnerable  to special device problems. If archived file
+ has  name  referring to special device it will be sent to this device
+ silently.  Authors  contacted, but in fact I don't see any attempt to
+ work this situation out:
+
+-- quote help@winzip.com
+WinZip will indeed have a problem with files which are named using what
+windows considers 'reserved' words; The windows operating system itself
+does not allow such words in filenames, although they may be considered
+perfectly valid under other operating systems.
+
+Please let me know if you have any questions.
+-- quote help@winzip.com--
+
+-- quote from second message help@winzip.com
+We are of course quite concious of the ramifications of the situation,
+and both the development staff and the QA personell are involved in
+addressing and testing such issues.  Thanks for your concern.
+
+If you have any further questions or feedback, please don't hesitate to
+write.
+-- quote from second message help@winzip.com--
+
+It reminds me something from Mark Twain.
+
+ PKWare PKZip 4.00:
+
+ Is  vulnerable.  It  doesn't  detect  special devices, but it detects
+ existence of the file and asks confirmation from user before writing.
+ If  pkzip  configured  to overwrite files without prompt file will be
+ overwritten silently. Vendor contacted, but no feedback were given on
+ this issue.
+
+ RARSoft WinRAR 2.80
+
+ WinRAR uses GetFileType() to determine type of target file, but fails
+ to  check  FILE_TYPE_PIPE  case. It leaves possibility to access some
+ certain  types  of  devices,  including (but not limited to) prn, but
+ most  dangerous  devices  are  filtered.  Overwrite confirmation also
+ required. According to Eugene Roshal problem will be completely fixed
+ in nearest version.
+
+ Archivers ported from Unix:
+
+ Info-Zip's  UnZip, Cygwin's port of tar and probably different ported
+ archivers  are  vulnerable.  DJGPP  (GNU) DOS port of tar is safe (it
+ uses stat()).
+ 
+
+Exploitation:
+
+ Given  archives  <A style="fixed" HREF="/files/archive/prntest.zip">prntest.zip</A>,  <A style="fixed" HREF="/files/archive/prntest.rar">prntest.rar</A>,  <A style="fixed" HREF="/files/archive/prntest.tar">prntest.tar</A> contain file
+ with  PRN  name.  It should print one text page on device attached to
+ PRN  on  extraction  (PRN refers by default to LPT1, you need printer
+ installed  on  LPT1  in  order  to  test  it.  You needn't to connect
+ printing  device  -  just install any driver). Try to extract it with
+ your favorite archiver.
+
+Workaround:
+
+ Test  content  of  the  archives  before  extraction  if  archive was
+ obtained  from  untrusted source. Never automate extraction and never
+ use administrator's account to extract data.
+
+Solution:
+
+ Wait for vendor's patch.
+
+</pre></font>
+
+#include "../include/postpage.html"

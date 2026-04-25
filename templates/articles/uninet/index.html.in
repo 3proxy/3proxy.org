@@ -1,0 +1,17 @@
+#define Title "Articles:Uninet"
+#include "../../include/intro.html"
+
+<h2>Security risks associated with using e-mail.</h2>
+<font class="tiny">by 3APA3A
+<br>as presented on <b><A class="tiny" target="_empty" href="http://infosec.uninet.edu">Uninet</a> conference</b>, April, 19 2002
+</font>
+<ol>
+	<li><A HREF="intro.html">Intro</a>
+	<li><A HREF="risks.html">Risks</a> assotiated with using e-mail.
+	<li><A HREF="server.html">How to fight malware on servers</a> and why this protection may be
+  ineffective
+	<li><A HREF="workstation.html">How to protect your workstations</a> and how make Windows more secure.
+	<li><A HREF="policy.html">How to create security policy</a> having e-mail attacks in mind
+</ol>
+
+#include "../../include/postpage.html"

@@ -1,0 +1,54 @@
+#define Title "Advisories : MSHTML buffer overflow in mshtml.dll"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+Topic:                    buffer overflow in mshtml.dll
+Authors:                  ERRor and DarkZorro of domain Hell
+                          3APA3A of SECURITY.NNOV
+Date:                     February, 13 2002
+Vendor Informed:          December, 20 2001
+Software affected:        Microsoft Internet Explorer 6.0 and prior
+                          Microsoft Outlook Express 6.0 and prior*
+                          Microsoft Outlook 2000 and prior*
+Remote:                   Yes
+Exploitable:              Yes
+Risk:                     High
+SECURITY.NNOV advisories: http://www.security.nnov.ru/advisories
+Thanks to:                Microsoft Security Response Center
+                          and CERT for working with us
+                          Andrey  Kolishak  for  helpful additional
+                          information on this issue
+                          
+
+Description:
+
+mshtml.dll  contains  buffer  overflow  while parsing HTML with embedded
+ActiveX  components.  Stack  overrun  occurs during concatenation of two
+Unicode  strings. It's possible to exploit this vulnerability to execute
+any code of attacker's choice (we do have proof-of-concept code, it will
+be  published  later  with  details of vulnerability). This overflow can
+only  be exploited if "Run ActiveX Controls and Plugins" security option
+is  enabled.  *This  option  is disabled by default for Restricted Sites
+Zone  Outlook  2000,  Outlook Express 6.0 and prior with security update
+installed  open all mail, but enabled by default in all different cases.
+This bug doesn't depend on Windows version.
+
+Workaround:
+
+Make  sue  "Run  ActiveX  Controls  and  Plugins" option is disabled for
+Internet  and  Restricted  Sites  zones  in security options of Internet
+Explorer.  Check  security zone for Outlook Express is set to Restricted
+Sites.
+
+Vendor and Solution:
+
+Microsoft  was  notified  on  December,  20  2001.  On February, 11 2002
+Microsoft  released  advisory  MS02-005 and cumulative patch q316059 for
+Microsoft Internet Explorer
+http://www.microsoft.com/windows/ie/downloads/critical/q316059/default.asp
+
+</pre></font>
+
+<A HREF="/search/news.html?binid=1782">More Information</A>
+
+#include "../include/postpage.html"

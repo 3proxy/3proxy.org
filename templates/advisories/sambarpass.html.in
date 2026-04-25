@@ -1,0 +1,62 @@
+#define Title "Advisories : Sambar Server all versions password decoding"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+Topic:                    Sambar Server all versions password
+                          decoding
+Author:                   3APA3A &lt;3APA3A@security.nnov.ru&gt;
+SECURITY.NNOV advisories: http://www.security.nnov.ru/advisories
+Vulnerable:               All Sambar versions up to 5.0 beta
+Impact:                   passwords  can be decoded back to
+                          cleartext
+Vendor URL:               http://www.sambar.com
+Released:                 24 July 2001
+Credits:                  mam0nt[GiN], superpo@mail2000.ru
+
+Background:
+
+Sambar  is  widely  used  Web/Proxy/Mail  server for Windows
+(there  are  both free and commercial "Pro" versions).
+
+Problem:
+
+Sambar  documentation  states  there  is  no  way  to repair
+forgotten password. It's not true, because by default server
+uses  blowfish  with  statically compiled key to encrypt all
+password.  Blowfish  uses  symmetric  key, it means with the
+same  key passwords can be easily decrypted. I don't believe
+authors  didn't  knew  that  because  they  coded decryption
+function  too.  Sambar  authors are aware about this problem
+(in  fact  it's  known  since  at  least  1999  according to
+mam0nt  page http://www.secure.f2s.com/texts/found_bug.php -
+in Russian). I  wonder why  authors  do  not  document  this
+behavior.
+
+Exploitation:
+
+I  was  too  lazy  to  discover  blowfish key. I didn't even
+checked is it blowfish or DES (in fact I didn't even started
+debugger.  I  did  everything  in text editor :)). Instead I
+wrote  small  program  which  "cracks"  sacrypt.exe  to load
+decryption  function  of  blowfish instead of encryption one
+from DLL by changing string argument of GetProcAddress().
+For more details see sadecrypt.c from <A HREF="/files/sadecrypt.zip">sadecrypt.zip</A>
+
+Workaround:
+
+--(quoting "Sambar Server Support" &lt;support@sambar.org&gt;)
+
+Many thanks.  Several folks have pointed out this
+vulnerability recently.  I used the two-way encryption
+algorithm intentionally to allow the password to be
+viewed/modified.  I have the option (config.ini) of 
+substituting UNIX crypt() for the two way hash I use 
+(blowfish) and will recommend folks switch to that.
+
+appreciate it.
+tod 
+--(quoting "Sambar Server Support" &lt;support@sambar.org&gt;)--
+
+</pre></font>
+
+#include "../include/postpage.html"

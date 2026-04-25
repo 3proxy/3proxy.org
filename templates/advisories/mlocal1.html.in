@@ -1,0 +1,81 @@
+#define Title "Advisories : unsafe fgets() in sendmail's mail.local"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+Topic:
+      unsafe fgets() in sendmail's mail.local
+
+Description:
+      There are 4 problems:
+      1. Possibility to insert LMTP commands into e-mail message
+      2. Possibility of deadlock between sendmail and mail.local
+      3. Possibility to corrupt user's mailbox
+      4. Possibility to change e-mail headers of the message in user's
+      mailbox
+
+Vulnerable software:
+     Problems  1  and  2:  sendmail  before 8.10.0 (8.9.3 tested), all
+     platforms
+     Problems  3  and  4:  sendmail  8.10.0 and 8.10.1 (8.10.1 tested)
+     under Solaris only
+
+Status: vendor contacted, problems 1 and 2 are patched in sendmail 8.10.0
+
+Long description:
+
+ Problem 1:
+
+ While  in  LMTP mode mail.local checks input for ".\n" string to find
+ the  end  of the message. Sendmail will not allow this string to pass
+ through,  but using of fgets() with buffersize 2048 allows to emulate
+ end of the message with a string
+
+ "(2047 chars).\n"
+
+ The rest of the message will be treated as LMTP commands. This allows
+ to  send messages to multiple mailboxes (including private and closed
+ ones) with any spoofed information bypassing sendmail and without any
+ filtering, checking, logging etc.
+
+ Problem 2:
+ 
+ In  the  conditions  of  the  problem  1, mail.local will return LMTP
+ answers to sendmail. Because sendmail doesn't expects any output from
+ mail.local  at this point, replies will not be taken from I/O buffer.
+ If  extreamaly  large number of LMTP commands is used in the text, or
+ the rest of the message is just a collection of text strings (in this
+ case  mail.local  will  reply with a error for every string) sendmail
+ and  mail.local  will  be  deadlocked then the buffer will be filled.
+ This  deadlock  problem  regardless  to  LMTP  command  execution was
+ reported  to  sendmail  team  by  Peter  Jeremy and patched in 8.10.0
+ release.
+
+ Problem 3:
+
+ sendmail  8.10.0 introduces support for "Content-Length: " header for
+ Solaris in mail.local. This header stores the size of the message and
+ is  used  by  mail  retrieving  software  (f.e. qpopper) to calculate
+ message  boundary  in  the  mailbox. If this header already exists in
+ message  it will be stripped, but because fgets() is used for parsing
+ message  it's  possible  to add "Content-Length: 99999999" header and
+ comment  out real "Content-Length: " causing mailbox corruption using
+ strings
+
+ "(2047 chars)\n"
+ "Content-Length: 99999999\n"
+
+ in the end of message header.
+
+ Problem 4:
+
+ If message body is empty and last string of the message header is
+
+ "(2047 chars)Content-Length: \n"
+
+ the  headers  of  this  message  will be glued to the next message in
+ mailbox,   because  '\n'  character  will  be  lost  while  stripping
+ Content-Length.
+ 
+</font></pre>
+
+#include "../include/postpage.html"

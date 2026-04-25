@@ -1,0 +1,63 @@
+#define Title "Advisories : The Bat! CR bug"
+#include "../include/intro.html"
+
+<pre><font class="fixed">
+
+SECURITY.NNOV URL:     http://www.security.nnov.ru/advisories
+Topic:                  The Bat! &lt;cr&gt; bug
+Application:            The Bat! 1.51 (latest)
+Vendor:                 RitLabs
+Category:               Denial of Service
+Risk Factor:            Low
+Remote:                 Yes
+Vendor Contacted:       13.04.2001
+Software URL:          http://www.thebat.net
+Vendor URL:            http://www.ritlabs.com
+
++Introduction:
+
+ The  Bat!  Is  very  convenient commercially available MUA for Windows
+ with lot of features.
+
++Details:
+
+ While  RETRiving  message  via  POP3  (IMAP  isn't  tested)  The Bat!
+ incorrectly  processes  0x0D  (CR)  character if it's not followed by
+ 0x0A  (LF).  Probably  each 0x0D character is treated as 2 octets and
+ The  Bat!  incorrectly calculates size of the message and the part of
+ message  is  treated  as  reply  from  POP3 server. The Bat! fails to
+ receive  the  rest  of  the  messages  and  fails  to delete received
+ messages  from server. This leads to DoS against user's POP3 account.
+ Malformed message can emulate any POP3 server replies.
+
++Exploitation:
+
+ Extract attached "badmessage" and send it, e.g. using
+
+   cat badmessage | sendmail -U victim@somewhere.net
+
+ or copy it to user's mailbox.
+ This message causes The Bat! to show something like:
+
+   !13.04.2001, 17:51:01: FETCH - Server reports error. The response is: 
+ --ERR Wrong User: replace user with your system administrator--
+
++Workaround:
+
+ use  "Dispatch  Mail  on  Server" feature to delete malformed message
+ from server or use different MUA.
+
++Solution:
+
+ Install TheBat! >= 1.52
+
++Vendor:
+
+ RitLabs  was  contacted  on April, 13 (happy Easter to you, guys). No
+ feedback yet.
+
+This  advisory  is being provided to you under RFPolicy v.2 documented
+at http://www.wiretrip.net/rfp/policy.html.
+</font>
+</pre>
+#include "../include/postpage.html"

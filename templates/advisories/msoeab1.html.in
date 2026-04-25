@@ -1,0 +1,69 @@
+#define Title "Advisories : Microsoft Outlook  Express  address  book allows messages to be intercepted by 3rd party"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+Issue                   :  Outlook  Express  address  book allows
+                           messages to be intercepted by 3rd party
+Date Released           :  16 March 2001
+Vendor Notified         :  16 March 2001
+Affected                :  Outlook Exress 5.5SP1 and prior
+Risk                    :  Low/Average
+Discovered              :  18 December 2000 by 3APA3A
+Remotely Exploitable    :  Yes
+Vendor URL              :  http://www.microsoft.com
+SECURITY.NNOV advisories:  http://www.security.nnov.ru/advisories
+
+Description:
+
+It's possible for remote user to cause messages written for one e-mail
+address to be delivered to another e-mail address.
+
+Details:
+
+Outlook  Express has option "Automatically put people I reply to in my
+address  book".  Then  enabled,  this  option  causes  Outlook to make
+automatically  new  address  book  entries  mapping  NAME  of received
+message  to  e-mail  ADDRESS. Then message is composed Outlook Express
+checks address book for NAME and sets complete e-mail ADDRESS instead.
+
+Exploitation:
+
+Situation:  2  good  users  G1  and  G2 with addresses g1@mail.com and
+g2@mail.com  and  one  bad  user B, b@mail.com. Imagine B wants to get
+messages G1 sends to G2. Scenario:
+
+1. B composes message with headers:
+
+From: "g2@mail.com" &lt;b@mail.com&gt;
+Reply-To: "g2@mail.com" &lt;b@mail.com&gt;
+To: G1 &lt;g1@mail.com&gt;
+Subject: how to catch you on Friday?
+
+and sends it to g1@mail.com
+
+2.  G1  receives  mail, which looks absolutely like mail received from
+g2@mail.com  and replies it. Reply will be received by B. In this case
+new  entry  is  created in address book pointing NAME "g2@mail.com" to
+ADDRESS b@mail.com.
+
+3.  Now,  if  while  composing  new  message  G1 directly types e-mail
+address  g2@mail.com  instead  of  G2, Outlook will compose address as
+"g2@mail.com" &lt;b@mail.com&gt; and message will be received by B.
+
+Workaround:
+
+Disable  "Automatically  put  people  I  reply to in my address  book"
+option.
+
+Vendor:
+
+Microsoft was contacted, accepted problem and replied it's impossible
+to fix it until next IE 5.5 SP.
+
+Solution:
+
+No yet.
+
+</pre></font>
+
+#include "../include/postpage.html"

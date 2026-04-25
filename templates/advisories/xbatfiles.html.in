@@ -1,0 +1,43 @@
+#define Title "Advisories:X-BAT-FILES"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+"The Bat!" by RitLabs is extremely convenient mail agent with a lot of
+features  for Windows platforms. One of "The Bat!" features is storing
+files  attached to e-mail messages apart from messages bodies. In this
+case  "The  Bat!"  puts  attached  files  in  preconfigured folder and
+removes  according  MIME  part  from message. Instead, "The Bat!" adds
+additional pseudo-header X-BAT-FILES, something like:
+
+      X-BAT-FILES: D:\Home\Incoming\attachment.doc
+
+There are few possible troubles:
+
+1. Then forwarding message with attachment this header isn't stripped.
+This  fact  allows  recipient  of  the  forward  to  know the physical
+location  of  the  user's  incoming files. This can be very useful for
+attack  like  in  "Georgi  Guninski  security  advisory  #8, 2000" ;-)
+because  you  can  send  any file to user and you will know where this
+file will be located.
+
+2. "The Bat!" doesn't check headers of the incoming message to contain
+this header (and this is even more dangerous). Intruder can spoof this
+header, for example to specify
+    X-BAT-FILES: C:\WINDOWS\user.dat
+in  message  headers.  In  this  case  user.dat will appear as message
+attachment!  If  recipient  will forward this message user.dat will be
+attached  to forward. If recipient will delete this message and option
+"Delete  attached  file  then  message  deleted  from trash folder" is
+checked C:\WINDOWS\user.dat will be deleted.
+
+Window 95/98 "special device name" attack is also possible.
+
+Tested with version 1.39
+
+Vendor contacted.
+
+http://www.security.nnov.ru
+
+</pre></font>
+
+#include "../include/postpage.html"

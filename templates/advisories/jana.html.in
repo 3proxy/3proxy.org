@@ -1,0 +1,104 @@
+#define Title "Advisories : Multiple vulnerabilities in JanaServer"
+#include "../include/intro.html"
+<pre><font class="fixed">
+
+Title:                  Multiple vulnerabilities in JanaServer
+Author:                 ZARAZA &lt;3APA3A@security.nnov.ru&gt;
+Date:                   July, 22 2002
+Affected:               JanaServer 2.2.1 and prior
+                        JanaServer 1.46 and prior
+Vendor:                 Thomas Hauck &lt;hilfe@janaserver.de&gt;
+Risk:                   High (critical if some services, for example
+                        HTTP, are available from public interface)
+Remote:                 yes
+Exploitable:            yes
+Vendor notified:        July, 18 2002
+Product URL:            http://www.janaserver.com
+SECURITY.NNOV URL:      http://www.security.nnov.ru
+Advanced info:          http://www.security.nnov.ru/search/news.asp?binid=2171
+
+I. Introduction:
+
+Janaserver  is Internet gateway software for Windows platform can act as
+HTTP/FTP/NEWS/SNTP   server,   SOCKS4/SOCKS5/HTTP/FTP/TELNET/Real  Audio
+proxy,  E-mail  gateway  and  port  mapper.  JanaServer  up  to 1.46 was
+freeware,  JanaServer  2.0 and above is shareware, it's intensively used
+in  SOHO  networks.  Under NT platforms it runs as a service with system
+privileges.
+
+II. Details:
+
+8 vulnerabilities were identified:
+
+1. HTTP server buffer overflow.
+
+GET / HTTP/[buffer].0
+
+causes overflow in logging component
+
+2. HTTP proxy buffer overflow
+
+Same overflow in HTTP proxy server running on TCP/3128.
+
+3. Socks5 Username/Password/Hostname signed/unsigned buffer overflow
+
+Username,  password  or  hostname  in  SOCKS5  request  longer  than 127
+characters  cause  buffer  overflow  because  of invalid usage of signed
+variable.
+
+4. POP3 gateway buffer overflow.
+
+oversized reply of POP3 server
+
++OK [buffer]
+
+causes buffer overflow in logging component.
+
+5. SMTP gateway buffer overflow
+
+same overflow in SMTP server response:
+
+nnn [buffer]
+
+6. FTP server PASV system-wide DoS
+
+On FTP PASV command server allocates TCP port without closing previously
+allocated  port. In makes it possible to consume all TCP ports available
+in system.
+
+7. POP3 username/password bruteforce
+
+POP3  gateway gives different diagnostics for valid and invalid username
+and  allows  unlimited  number  of  authentication attempts. It makes it
+easy to bruteforce username/password.
+
+8. POP3 array index overrun (JanaServer <= 1.46)
+
+During  mailbox  commands  there is no check message index is valid. For
+example
+
+RETR 1000000
+or
+DELE 1000000
+
+will cause server to crash. JanaServer 2.2.1 is not vulnerable.
+
+III. Workarounds:
+
+1. Disable HTTP logging
+2. Disable HTTP proxy logging
+3. Disable socks proxy
+4,5. Edit Texte.dat file, replace all occurrences of "%s" to "%.255s" in
+lines numbered from 300 to 455.
+6. Disable FTP server
+7,8 Disable mail gateway
+
+IV. Vendor and solution:
+
+Vendor  was informed on July, 18 2002. Vendor claims all bugs are fixed.
+No  reply from vendor since July, 19 2002. There is no information about
+fixed version available on product's site.
+
+</pre></font>
+
+#include "../include/postpage.html"

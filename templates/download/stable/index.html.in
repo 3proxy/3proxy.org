@@ -1,0 +1,8 @@
+#define Title "3proxy stable version"
+#include "../../include/intro.html"
+
+Do you like 3proxy? You can donate in bitcoins: <A href="bitcoin:1BFYgmikjfUXzaPRwFDkR25oebBBPvpzj8">1BFYgmikjfUXzaPRwFDkR25oebBBPvpzj8</A>, or in <a href="/donations/">any other</a> form.
+
+<h2>Current stable version: download from <a href="https://github.com/3proxy/3proxy/releases/latest">Github</a>, docker images on <a href="https://hub.docker.com/repository/docker/3proxy/3proxy">DockerHub</a></h2>
+
+#include "../../include/postpage.html"

@@ -1,0 +1,4 @@
+#define Title "Soft:3proxy:FAQ"
+#include "include/intro.html"
+#include "doc/html/faqr.html"
+#include "include/postpage.html"

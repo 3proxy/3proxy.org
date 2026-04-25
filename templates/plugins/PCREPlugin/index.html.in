@@ -1,0 +1,6 @@
+#define Title "3proxy Perl Compatible Regular Expressions (PCRE) plugin"
+#include "../../include/intro.html"
+
+#include "../../doc/html/plugins/PCREPlugin.html"
+
+#include "../../include/postpage.html"
