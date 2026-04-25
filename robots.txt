@@ -1,0 +1,22 @@
+User-agent: Yandex
+Disallow: *.zip
+Disallow: *.gz
+Disallow: *.tgz
+Disallow: *.exe
+Disallow: /j*
+Host: 3proxy.ru
+
+User-agent: Googlebot
+Disallow: *.zip
+Disallow: *.gz
+Disallow: *.tgz
+Disallow: *.exe
+Disallow: /j*
+
+
+User-agent: *
+Disallow: *.zip
+Disallow: *.gz
+Disallow: *.tgz
+Disallow: *.exe
+Disallow: /j*
