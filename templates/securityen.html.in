@@ -1,4 +1,4 @@
 #define Title "Soft:3proxy"
 #include "include/intro.html"
-#include "doc/html/securityen.html"
+#include "../3proxy/doc/html/securityen.html"
 #include "include/postpage.html"

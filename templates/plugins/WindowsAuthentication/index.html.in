@@ -1,6 +1,6 @@
 #define Title "3proxy Windows Authentication plugin"
 #include "../../include/intro.html"
 
-#include "../../doc/html/plugins/WindowsAuthentication.html"
+#include "../../../3proxy/doc/html/plugins/WindowsAuthentication.html"
 
 #include "../../include/postpage.html"
