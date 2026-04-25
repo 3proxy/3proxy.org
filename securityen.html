@@ -1,0 +1,184 @@
+
+<html lang="ru">
+<head>
+<!--
+	OriginalURI=
+-->
+	<meta name="theme-color" content="#ffffff">
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/favicon.ico" type="type=image/x-icon">
+	<link rel="stylesheet" href="/style/bootstrap.min.css">
+	<script src="/js/jquery.min.js"></script>
+	<script src="/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" href="/style/main.css">
+        <title>
+Soft:3proxy	</title>
+
+	<meta name="Description" content="3proxy freeware proxy server for Windows and Unix. HTTP, SOCKS, FTP, POP3">
+	<meta name="keywords" content="3proxy, proxy, proxy server, free, freeware, socks, socks v5">
+
+<meta NAME="Author" content="3APA3A">
+</head>
+
+<body>
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="/"><span class="nav-logotext"><span class="nav-logotext1">3</span>&nbsp;&nbsp;PROXY</span></a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+		<ul class="navbar-nav">
+
+		  <li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Downloads
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+			<a class="dropdown-item" href="/download/">Downloads</a>
+			<a class="dropdown-item" href="/download/stable/">Stable version</a>
+			<a class="dropdown-item" href="/download/devel/">Development version</a>
+			<a class="dropdown-item" href="https://github.com/z3APA3A/3proxy">GIT</a>
+			<a class="dropdown-item" href="https://hub.docker.com/repository/docker/3proxy/3proxy">Docker</a>
+			</div>
+			</li>
+			<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Documentation
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/documents/">Documentation</a>
+				<a class="dropdown-item" href="/doc/">Manual</a>
+				<a class="dropdown-item" href="/howtoe.html">HowTo</a>
+				<a class="dropdown-item" href="/plugins/">Plugins</a>
+			</div>
+		  </li>
+			<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  About
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/">About</a>
+				<a class="dropdown-item" href="https://github.com/z3APA3A/3proxy/issues">Questions and issues</a>
+				<a class="dropdown-item" href="/donations/">Help the project</a>
+			</div>
+		  </li>
+
+		</ul>
+	</div>
+
+	<div class="lang-toogle nav navbar navbar-right navbar-dark bg-dark">
+		<a href="" lang="ru" id="lang-switch">RU</a><span>|</span><span lang="en">EN</span>
+	</div>
+	<script>document.getElementById('lang-switch').href='https://3proxy.ru'+location.pathname;</script>
+		
+</nav>
+
+<div class="container container-content">
+  <div class="info-block">
+	<div class="alert alert-warning">
+		<a href="#" class="close close-info-block" data-bs-dismiss="alert" aria-label="close">&times;</a>
+		<strong>
+
+ Few antiviral products inadequately detect 3proxy as Trojan.Daemonize,
+ Backdoor.Daemonize, etc and many detect 3proxy as a PUA (potentially unwanted program). 
+ It may cause browser warning on download page.
+ 3proxy is not trojan or backdoor and contains
+ no functionality except described in documentation. Clear explanation of this
+ fact is given, for example, in
+ <A class="tiny" HREF="https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Program:Win32/TinyProxy" target="_blank">Microsoft</A>'s
+ article.
+
+		</strong>
+	</div>
+	
+  </div>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+  
+  // info-block
+  
+	if (localStorage.getItem('show-info-block') == null) {
+		$('.info-block').show('slow');
+	} else {
+		$('.info-block').hide('slow');
+	}
+	
+	$('.close-info-block').on('click', function(){
+		localStorage.setItem('show-info-block', '0');
+	})
+  
+  // code highlighting
+	
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  
+  
+  
+});
+  </script><h3>3proxy Security Considerations</h3>
+<ul>
+<li>Never install 3proxy suid. If you need it to run suid, write a
+wrapper with a fixed configuration file.
+<li>Make the configuration file accessible only to the account 3proxy starts with.
+<li>Under Windows, if 3proxy is used as a service, create a new
+unprivileged local account without "logon locally" rights. Assign this account
+to the 3proxy service.
+<li>Under Unix, use chroot to jail 3proxy (make sure files included in
+the configuration file after the 'chroot' command, if any, are available from within the jail).
+<li>Under Unix, either start 3proxy with an unprivileged account or, if you need
+some privileged ports to be used by 3proxy, use setgid/setuid commands inside
+3proxy.cfg immediately after the last occurrence of a service bound to a
+privileged port in the configuration file (setgid must precede setuid).
+<li>Always use full paths in the configuration file.
+<li>Try to avoid 'strong' authentication, because only cleartext
+authentication is currently available.
+<li>Always specify internal and external interfaces.
+<li>Always limit connections to the internal network and localhost (to 127.0.0.1 and
+all interfaces) with ACLs. Be careful, because the BIND command in SOCKS requires the
+BIND method with the external interface IP address to be allowed.
+<li>Before 3proxy 0.8, always use nserver and nscache under Unix; otherwise, a DoS attack is possible
+with an unreachable DNS server (because gethostbyname will block other threads).
+<li>Keep logs in a secure location, because some confidential information from
+user requests can be logged.
+<li>Use -xyz+A character filtering sequences for 'logformat', especially with
+ODBC logging, to prevent SQL and log record injections.
+<li>Immediately report all service crashes to the developers.
+<li>Participate in code audit :)
+</ul>
+
+<p>
+
+ 
+<p><img src="/favicon-1.png" align="right">
+</div>	
+
+<br><br><br><br><br>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+	
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  
+  var offset = $(':target').offset();
+var scrollto = offset.top - 60; // minus fixed header height
+$('html, body').animate({scrollTop:scrollto}, 0);
+  
+});
+  </script>
+
+    <footer class="footer bg-dark">
+      <div class="container">
+        <span class="text-muted">&copy; 2000-2026 3APA3A, Vladimir Dubrovin. Please contact <a class="tiny" href="mailto:3proxy@3proxy.ru">3proxy development team</a> if you want to contribute code or maintain port. 
+<br> design saw-friendship 2018</span>
+      </div>
+    </footer>
+	
+</body>
+</html>

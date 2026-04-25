@@ -1,0 +1,275 @@
+
+<html lang="ru">
+<head>
+<!--
+	OriginalURI=
+-->
+	<meta name="theme-color" content="#ffffff">
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/favicon.ico" type="type=image/x-icon">
+	<link rel="stylesheet" href="/style/bootstrap.min.css">
+	<script src="/js/jquery.min.js"></script>
+	<script src="/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" href="/style/main.css">
+        <title>
+3proxy : Documentation : SSLPlugin	</title>
+
+	<meta name="Description" content="3proxy freeware proxy server for Windows and Unix. HTTP, SOCKS, FTP, POP3">
+	<meta name="keywords" content="3proxy, proxy, proxy server, free, freeware, socks, socks v5">
+
+<meta NAME="Author" content="3APA3A">
+</head>
+
+<body>
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="/"><span class="nav-logotext"><span class="nav-logotext1">3</span>&nbsp;&nbsp;PROXY</span></a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+		<ul class="navbar-nav">
+
+		  <li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Downloads
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+			<a class="dropdown-item" href="/download/">Downloads</a>
+			<a class="dropdown-item" href="/download/stable/">Stable version</a>
+			<a class="dropdown-item" href="/download/devel/">Development version</a>
+			<a class="dropdown-item" href="https://github.com/z3APA3A/3proxy">GIT</a>
+			<a class="dropdown-item" href="https://hub.docker.com/repository/docker/3proxy/3proxy">Docker</a>
+			</div>
+			</li>
+			<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Documentation
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/documents/">Documentation</a>
+				<a class="dropdown-item" href="/doc/">Manual</a>
+				<a class="dropdown-item" href="/howtoe.html">HowTo</a>
+				<a class="dropdown-item" href="/plugins/">Plugins</a>
+			</div>
+		  </li>
+			<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  About
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/">About</a>
+				<a class="dropdown-item" href="https://github.com/z3APA3A/3proxy/issues">Questions and issues</a>
+				<a class="dropdown-item" href="/donations/">Help the project</a>
+			</div>
+		  </li>
+
+		</ul>
+	</div>
+
+	<div class="lang-toogle nav navbar navbar-right navbar-dark bg-dark">
+		<a href="" lang="ru" id="lang-switch">RU</a><span>|</span><span lang="en">EN</span>
+	</div>
+	<script>document.getElementById('lang-switch').href='https://3proxy.ru'+location.pathname;</script>
+		
+</nav>
+
+<div class="container container-content">
+  <div class="info-block">
+	<div class="alert alert-warning">
+		<a href="#" class="close close-info-block" data-bs-dismiss="alert" aria-label="close">&times;</a>
+		<strong>
+
+ Few antiviral products inadequately detect 3proxy as Trojan.Daemonize,
+ Backdoor.Daemonize, etc and many detect 3proxy as a PUA (potentially unwanted program). 
+ It may cause browser warning on download page.
+ 3proxy is not trojan or backdoor and contains
+ no functionality except described in documentation. Clear explanation of this
+ fact is given, for example, in
+ <A class="tiny" HREF="https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Program:Win32/TinyProxy" target="_blank">Microsoft</A>'s
+ article.
+
+		</strong>
+	</div>
+	
+  </div>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+  
+  // info-block
+  
+	if (localStorage.getItem('show-info-block') == null) {
+		$('.info-block').show('slow');
+	} else {
+		$('.info-block').hide('slow');
+	}
+	
+	$('.close-info-block').on('click', function(){
+		localStorage.setItem('show-info-block', '0');
+	})
+  
+  // code highlighting
+	
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  
+  
+  
+});
+  </script><h3>3proxy SSL/TLS Plugin</h3>
+
+This plugin can be used to transparently decrypt SSL/TLS data, provide TLS encryption for proxy traffic, and authenticate using client certificates.
+
+<h4>For transparent certificate spoofing (MITM):</h4>
+
+<br>ssl_mitm - spoof certificates for services started below. Usage without ssl_client_verify is insecure.
+<br>ssl_nomitm - do not spoof certificates for services started below
+
+<h4>To protect traffic to the server (https:// proxy):</h4>
+
+ssl_serv (or ssl_server) - require TLS connection from clients for services below
+<br>ssl_noserv (or ssl_noserver) - do not require TLS connection from clients for services below
+
+<h4>To use TLS for upstream connections:</h4>
+
+ssl_cli (or ssl_client) - establish TLS connection to upstream server for services below
+<br>ssl_nocli (or ssl_noclient) - do not establish TLS connection to upstream server for services below
+
+<h4>Parameters:</h4>
+
+<br><b>ssl_server_cert</b> /path/to/cert - Server certificate (should not be self-signed and must contain an Alternative Name) for ssl_serv
+<br><b>ssl_server_key</b> /path/to/key - Server certificate key for ssl_server_cert or generated MITM certificate
+<br><b>ssl_client_cert</b> /path/to/cert - Client certificate for authentication on upstream server (used with ssl_cli)
+<br><b>ssl_client_key</b> /path/to/key - Client certificate key for ssl_client_cert
+<br><b>ssl_client_ciphersuites</b> ciphersuites_list - TLS client ciphers for TLS 1.3, e.g., ssl_client_ciphersuites TLS_AES_128_GCM_SHA256
+<br><b>ssl_server_ciphersuites</b> ciphersuites_list - TLS server ciphers for TLS 1.3
+<br><b>ssl_client_cipher_list</b> ciphers_list - TLS client ciphers for TLS 1.2 and below, e.g., ssl_client_cipher_list ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305
+<br><b>ssl_server_cipher_list</b> ciphers_list - TLS server ciphers for TLS 1.2 and below
+<br><b>ssl_client_min_proto_version</b> tls_version - TLS client minimum TLS version (e.g., TLSv1.2)
+<br><b>ssl_server_min_proto_version</b> tls_version - TLS server minimum TLS version (e.g., TLSv1.2)
+<br><b>ssl_client_max_proto_version</b> tls_version - TLS client maximum TLS version (e.g., TLSv1.2)
+<br><b>ssl_server_max_proto_version</b> tls_version - TLS server maximum TLS version (e.g., TLSv1.2)
+<br><b>ssl_client_verify</b> - verify the certificate for the upstream server in TLS client functionality (used with ssl_mitm or ssl_cli)
+<br><b>ssl_client_no_verify</b> - do not verify the certificate for the upstream server in TLS client functionality (default)
+<br><b>ssl_server_verify</b> - require client certificate authentication (mTLS) for ssl_serv
+<br><b>ssl_server_no_verify</b> - do not require client certificate (default)
+<br><b>ssl_server_ca_file</b> /path/to/cafile - CA certificate file for MITM
+<br><b>ssl_server_ca_key</b> /path/to/cakey - key for ssl_server_ca_file MITM CA
+<br><b>ssl_server_ca_dir</b> /path/to/cadir - CA directory for ssl_server_verify
+<br><b>ssl_server_ca_store</b> /path/to/castore - CA store for ssl_server_verify (OpenSSL 3.0+)
+<br><b>ssl_client_ca_file</b> /path/to/cafile - CA file for ssl_client_verify
+<br><b>ssl_client_ca_dir</b> /path/to/cadir - CA directory for ssl_client_verify
+<br><b>ssl_client_ca_store</b> /path/to/castore - CA store for ssl_client_verify (OpenSSL 3.0+)
+<br><b>ssl_client_sni</b> hostname - SNI hostname to send to upstream server (overrides the requested hostname)
+<br><b>ssl_client_alpn</b> protocol1 protocol2 ... - ALPN protocols to negotiate with upstream server (e.g., ssl_client_alpn h2 http/1.1)
+<br><b>ssl_client_mode</b> mode - when to establish TLS connection: 0 - on connect (default), 1 - after authentication, 2 - before data, 3 - only for secure parent types (ending with 's')
+<br><b>ssl_certcache</b> /path/to/cache/ - location for the generated MITM certificates cache, optional if ssl_server_ca_file / ssl_server_ca_key are configured.
+The cache may contain 3 files: 3proxy.pem - public
+self-signed certificates (used if ssl_server_ca_file is not configured),
+3proxy.key - key for public certificates, used if ssl_server_ca_key is not configured, server.key - this key is used if ssl_server_key is not configured to generate
+spoofed certificates. If server.key is absent, 3proxy.key is used to generate certificates.
+Generated certificates are placed in the same path.
+
+
+<h4>MITM example:</h4>
+<pre>
+plugin /path/to/SSLPlugin.so ssl_plugin
+ssl_server_ca_file /path/to/cafile
+ssl_server_ca_key /path/to/cakey
+ssl_mitm
+proxy -p3128
+ssl_nomitm
+proxy -p3129
+</pre>
+MITM's traffic with a spoofed certificate for the port 3128 proxy.
+
+<h4>https:// proxy example:</h4>
+<pre>
+plugin /path/to/SSLPlugin.so ssl_plugin
+ssl_server_cert path_to_cert
+ssl_server_key path_to_key
+ssl_serv
+proxy -p33128
+ssl_noserv
+proxy -p3128
+</pre>
+Creates an https:// proxy on port 33128 and an http:// proxy on port 3128
+
+<h4>TLS client example (connect to upstream via TLS):</h4>
+<pre>
+plugin /path/to/SSLPlugin.so ssl_plugin
+ssl_client_cert /path/to/client.crt
+ssl_client_key /path/to/client.key
+ssl_client_verify
+ssl_client_ca_file /path/to/ca.crt
+ssl_cli
+proxy -p3128
+</pre>
+Creates an HTTP proxy that connects to upstream servers via TLS with client certificate authentication.
+
+<h4>Conditional TLS for parent proxy (ssl_client_mode 3):</h4>
+<pre>
+plugin /path/to/SSLPlugin.so ssl_plugin
+ssl_server_cert /path/to/server.crt
+ssl_server_key /path/to/key
+ssl_client_mode 3
+
+auth strong
+allow user1
+parent 1000 https parent1.example.com 443
+allow user2
+parent 1000 socks5 parent2.example.com 1080
+ssl_serv
+ssl_cli
+proxy -p3128
+ssl_noserv
+ssl_nocli
+</pre>
+Creates an HTTP proxy on port 3128 that uses TLS for client connections (ssl_serv). With ssl_client_mode 3, TLS handshake to parent proxy is performed only if the parent type ends with 's' (secure types). In this example, user1's traffic goes through an https parent proxy with TLS encryption, while user2's traffic goes through a regular socks5 parent without TLS. Secure parent types include: tcps, https, connects, connect+s, socks4s, socks5s, socks4+s, socks5+s, pop3s, smtps, ftps.
+
+<h4>mTLS example (require client certificate):</h4>
+<pre>
+plugin /path/to/SSLPlugin.so ssl_plugin
+ssl_server_cert /path/to/server.crt
+ssl_server_key /path/to/server.key
+ssl_server_ca_file /path/to/ca.crt
+ssl_server_verify
+ssl_serv
+proxy -p3128
+</pre>
+Creates an https:// proxy that requires client certificate authentication.
+
+&copy; Vladimir Dubrovin, License: BSD style
+ 
+<p><img src="/favicon-1.png" align="right">
+</div>	
+
+<br><br><br><br><br>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+	
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  
+  var offset = $(':target').offset();
+var scrollto = offset.top - 60; // minus fixed header height
+$('html, body').animate({scrollTop:scrollto}, 0);
+  
+});
+  </script>
+
+    <footer class="footer bg-dark">
+      <div class="container">
+        <span class="text-muted">&copy; 2000-2026 3APA3A, Vladimir Dubrovin. Please contact <a class="tiny" href="mailto:3proxy@3proxy.ru">3proxy development team</a> if you want to contribute code or maintain port. 
+<br> design saw-friendship 2018</span>
+      </div>
+    </footer>
+	
+</body>
+</html>

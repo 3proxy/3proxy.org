@@ -1,0 +1,184 @@
+
+<html lang="ru">
+<head>
+<!--
+	OriginalURI=
+-->
+	<meta name="theme-color" content="#ffffff">
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/favicon.ico" type="type=image/x-icon">
+	<link rel="stylesheet" href="/style/bootstrap.min.css">
+	<script src="/js/jquery.min.js"></script>
+	<script src="/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" href="/style/main.css">
+        <title>
+3proxy SSL/TLS plugin	</title>
+
+	<meta name="Description" content="3proxy freeware proxy server for Windows and Unix. HTTP, SOCKS, FTP, POP3">
+	<meta name="keywords" content="3proxy, proxy, proxy server, free, freeware, socks, socks v5">
+
+<meta NAME="Author" content="3APA3A">
+</head>
+
+<body>
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="/"><span class="nav-logotext"><span class="nav-logotext1">3</span>&nbsp;&nbsp;PROXY</span></a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+		<ul class="navbar-nav">
+
+		  <li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Downloads
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+			<a class="dropdown-item" href="/download/">Downloads</a>
+			<a class="dropdown-item" href="/download/stable/">Stable version</a>
+			<a class="dropdown-item" href="/download/devel/">Development version</a>
+			<a class="dropdown-item" href="https://github.com/z3APA3A/3proxy">GIT</a>
+			<a class="dropdown-item" href="https://hub.docker.com/repository/docker/3proxy/3proxy">Docker</a>
+			</div>
+			</li>
+			<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Documentation
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/documents/">Documentation</a>
+				<a class="dropdown-item" href="/doc/">Manual</a>
+				<a class="dropdown-item" href="/howtoe.html">HowTo</a>
+				<a class="dropdown-item" href="/plugins/">Plugins</a>
+			</div>
+		  </li>
+			<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  About
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/">About</a>
+				<a class="dropdown-item" href="https://github.com/z3APA3A/3proxy/issues">Questions and issues</a>
+				<a class="dropdown-item" href="/donations/">Help the project</a>
+			</div>
+		  </li>
+
+		</ul>
+	</div>
+
+	<div class="lang-toogle nav navbar navbar-right navbar-dark bg-dark">
+		<a href="" lang="ru" id="lang-switch">RU</a><span>|</span><span lang="en">EN</span>
+	</div>
+	<script>document.getElementById('lang-switch').href='https://3proxy.ru'+location.pathname;</script>
+		
+</nav>
+
+<div class="container container-content">
+  <div class="info-block">
+	<div class="alert alert-warning">
+		<a href="#" class="close close-info-block" data-bs-dismiss="alert" aria-label="close">&times;</a>
+		<strong>
+
+ Few antiviral products inadequately detect 3proxy as Trojan.Daemonize,
+ Backdoor.Daemonize, etc and many detect 3proxy as a PUA (potentially unwanted program). 
+ It may cause browser warning on download page.
+ 3proxy is not trojan or backdoor and contains
+ no functionality except described in documentation. Clear explanation of this
+ fact is given, for example, in
+ <A class="tiny" HREF="https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Program:Win32/TinyProxy" target="_blank">Microsoft</A>'s
+ article.
+
+		</strong>
+	</div>
+	
+  </div>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+  
+  // info-block
+  
+	if (localStorage.getItem('show-info-block') == null) {
+		$('.info-block').show('slow');
+	} else {
+		$('.info-block').hide('slow');
+	}
+	
+	$('.close-info-block').on('click', function(){
+		localStorage.setItem('show-info-block', '0');
+	})
+  
+  // code highlighting
+	
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  
+  
+  
+});
+  </script>
+<h3>3proxy TransparentPlugin (Linux/BSD only)</h3>
+
+This plugin can turn 3proxy into a transparent proxy for virtually any TCP-based protocol
+and use all 3proxy features - redirections, parent proxies, ACLs, traffic limitations,
+etc. The TransparentPlugin takes the destination IP:port from Linux and uses this
+information as the target IP in the proxy. An example usage:
+
+<pre>
+plugin /path/to/TransparentPlugin.ld.so transparent_plugin
+log /path/to/log
+auth iponly
+allow * * * 80
+parent 1000 http 0.0.0.0 0
+allow *
+parent 1000 socks5 SOCKS5_IP SOCKS5_PORT USER PASSWORD
+transparent
+tcppm -iLOCAL_IP 12345 127.0.0.1 11111
+notransparent
+proxy
+</pre>
+Now, any TCP traffic transparently redirected to port 12345 will be routed via
+the parent SOCKSv5 proxy and logged; all URLs for web requests are visible in logs.
+The parameters '127.0.0.1 11111' in this case are not used and are overwritten by
+the destination IP:port for each transparent connection.
+
+<h4>Download:</h4>
+<ul>
+ <li>Plugin is included in 3proxy 0.8
+</li></ul>
+
+&copy; Vladimir Dubrovin, License: BSD style
+
+ 
+<p><img src="/favicon-1.png" align="right">
+</div>	
+
+<br><br><br><br><br>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+	
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  
+  var offset = $(':target').offset();
+var scrollto = offset.top - 60; // minus fixed header height
+$('html, body').animate({scrollTop:scrollto}, 0);
+  
+});
+  </script>
+
+    <footer class="footer bg-dark">
+      <div class="container">
+        <span class="text-muted">&copy; 2000-2026 3APA3A, Vladimir Dubrovin. Please contact <a class="tiny" href="mailto:3proxy@3proxy.ru">3proxy development team</a> if you want to contribute code or maintain port. 
+<br> design saw-friendship 2018</span>
+      </div>
+    </footer>
+	
+</body>
+</html>

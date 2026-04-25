@@ -1,0 +1,241 @@
+
+<html lang="ru">
+<head>
+<!--
+	OriginalURI=
+-->
+	<meta name="theme-color" content="#ffffff">
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/favicon.ico" type="type=image/x-icon">
+	<link rel="stylesheet" href="/style/bootstrap.min.css">
+	<script src="/js/jquery.min.js"></script>
+	<script src="/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" href="/style/main.css">
+        <title>
+3proxy : Documentation : PCREPlugin.ru	</title>
+
+	<meta name="Description" content="3proxy freeware proxy server for Windows and Unix. HTTP, SOCKS, FTP, POP3">
+	<meta name="keywords" content="3proxy, proxy, proxy server, free, freeware, socks, socks v5">
+
+<meta NAME="Author" content="3APA3A">
+</head>
+
+<body>
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="/"><span class="nav-logotext"><span class="nav-logotext1">3</span>&nbsp;&nbsp;PROXY</span></a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+		<ul class="navbar-nav">
+
+		  <li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Downloads
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+			<a class="dropdown-item" href="/download/">Downloads</a>
+			<a class="dropdown-item" href="/download/stable/">Stable version</a>
+			<a class="dropdown-item" href="/download/devel/">Development version</a>
+			<a class="dropdown-item" href="https://github.com/z3APA3A/3proxy">GIT</a>
+			<a class="dropdown-item" href="https://hub.docker.com/repository/docker/3proxy/3proxy">Docker</a>
+			</div>
+			</li>
+			<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Documentation
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/documents/">Documentation</a>
+				<a class="dropdown-item" href="/doc/">Manual</a>
+				<a class="dropdown-item" href="/howtoe.html">HowTo</a>
+				<a class="dropdown-item" href="/plugins/">Plugins</a>
+			</div>
+		  </li>
+			<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  About
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/">About</a>
+				<a class="dropdown-item" href="https://github.com/z3APA3A/3proxy/issues">Questions and issues</a>
+				<a class="dropdown-item" href="/donations/">Help the project</a>
+			</div>
+		  </li>
+
+		</ul>
+	</div>
+
+	<div class="lang-toogle nav navbar navbar-right navbar-dark bg-dark">
+		<a href="" lang="ru" id="lang-switch">RU</a><span>|</span><span lang="en">EN</span>
+	</div>
+	<script>document.getElementById('lang-switch').href='https://3proxy.ru'+location.pathname;</script>
+		
+</nav>
+
+<div class="container container-content">
+  <div class="info-block">
+	<div class="alert alert-warning">
+		<a href="#" class="close close-info-block" data-bs-dismiss="alert" aria-label="close">&times;</a>
+		<strong>
+
+ Few antiviral products inadequately detect 3proxy as Trojan.Daemonize,
+ Backdoor.Daemonize, etc and many detect 3proxy as a PUA (potentially unwanted program). 
+ It may cause browser warning on download page.
+ 3proxy is not trojan or backdoor and contains
+ no functionality except described in documentation. Clear explanation of this
+ fact is given, for example, in
+ <A class="tiny" HREF="https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Program:Win32/TinyProxy" target="_blank">Microsoft</A>'s
+ article.
+
+		</strong>
+	</div>
+	
+  </div>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+  
+  // info-block
+  
+	if (localStorage.getItem('show-info-block') == null) {
+		$('.info-block').show('slow');
+	} else {
+		$('.info-block').hide('slow');
+	}
+	
+	$('.close-info-block').on('click', function(){
+		localStorage.setItem('show-info-block', '0');
+	})
+  
+  // code highlighting
+	
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  
+  
+  
+});
+  </script><h3>Плагин регулярных выражений совместимых с Perl (PCRE) для 3proxy</h3>
+
+Фильтрующий плагин используется для создания правил поиска и замены
+регулярных выражений в запросе, заголовков запроса и ответа и данных.
+Добавляет поддержку 3х новых команд в файле конфигурации:
+
+<pre>
+pcre TYPE FILTER_ACTION REGEXP [ACE]
+pcre_rewrite TYPE FILTER_ACTION REGEXP REWRITE_EXPRESSION [ACE]
+pcre_extend FILTER_ACTION [ACE]
+pcre_options OPTION1 [...]
+</pre>
+pcre - позволяет искать совпадения
+<br>pcre_rewrite - дополнительно позволяет производить замену подстрок
+<br>pcre_extend - расширяет ACL последней команды pcre или pcre_rewrite путем
+добавления еще одной ACE (аналогично списку правил allow/deny).
+<br>pcre_options - позволяет устанавливать опции поиска, доступны следующие опции:
+PCRE_CASELESS,
+PCRE_MULTILINE,
+PCRE_DOTALL,
+PCRE_EXTENDED,
+PCRE_ANCHORED,
+PCRE_DOLLAR_ENDONLY,
+PCRE_EXTRA,
+PCRE_NOTBOL,
+PCRE_NOTEOL,
+PCRE_UNGREEDY,
+PCRE_NOTEMPTY,
+PCRE_UTF8,
+PCRE_NO_AUTO_CAPTURE,
+PCRE_NO_UTF8_CHECK,
+PCRE_AUTO_CALLOUT,
+PCRE_PARTIAL,     
+PCRE_DFA_SHORTEST,
+PCRE_DFA_RESTART,
+PCRE_FIRSTLINE,
+PCRE_DUPNAMES,
+PCRE_NEWLINE_CR,
+PCRE_NEWLINE_LF,
+PCRE_NEWLINE_CRLF,
+PCRE_NEWLINE_ANY,
+PCRE_NEWLINE_ANYCRLF,
+PCRE_BSR_ANYCRLF,
+PCRE_BSR_UNICODE
+
+
+<ul>
+<li>TYPE - тип фильтруемых данных. Может содержать одно или
+несколько (список через запятую) значений:
+ <ul>
+ <li>request - содержимое запроса клиента (например строка HTTP GET-запроса).
+(в настоящий момент изменение запроса не приводит к изменению адреса запрашиваемого хоста)
+ <li>cliheader - содержимое заголовков запроса клиента, например заголовки HTTP
+ <li>srvheader - содержимое заголовков ответа сервера, например заголовки HTTP
+ <li>clidata - данные полученные от клиента, например данные POST-запроса
+ <li>srvdata - данные полученные от сервера, например содержимое HTML-страницы
+ </ul>
+<li>FILTER_ACTION - действие при совпадении. Может принимать значение
+ <ul><li>allow - разрешить данный запрос без просмотра дальнейших правил
+ <li>deny - запретить данный запрос без просмотра дальнейших правил
+ <li>dunno - продолжить анализ правил (полезно для pcre_rewrite) 
+ </ul>
+<li>REGEXP - регулярное выражение в формате PCRE (perl). Используйте * если не
+требуется проерка регулярного выражения.
+<li>REWRITE_EXPRESSION - строка замены. Может содержать макроподстановки
+(не тестировалось) $1, $2 и т.д. аналогично perl. $0 - полная найденная
+подстрока. В строке замены можно использовать сочетания \r, \n для вставки
+новых строк. Строка может быть пустой ("").
+<li>ACE - Список контроля доступа (имя пользователя, IP источника, IP назначения, порт и т.д.),
+полностью аналогичный ACE в командах allow, deny, bandlimin и т.п. Регулярное
+выражение проверяется только при совпадении ACE с запросом. ВНИМАНИЕ:
+использование регулярных выражений не требует авторизации и не заменяет ее.
+Авторизацию необходимо конфигурировать отдельно.
+</ul>
+
+
+<h4>Пример:</h4>
+<pre>
+plugin PCREPlugin.dll pcre_plugin
+pcre request deny "porn|sex" user1,user2,user3 192.168.0.0/16
+pcre srvheader deny "Content-type: application"
+pcre_rewrite clidata,srvdata dunno "porn|sex|pussy" "***" baduser
+pcre_extend deny * 192.168.0.1/16
+</pre>
+
+<h4>Загрузить:</h4>
+<ul>
+ <li>Плагин включен в дистрибутив 3proxy 0.6
+ <li>Пример конфигурации (by Dennis Garber): <A HREF="NoPornLitest.cfg.txt">NoPornLitest.cfg</A>
+</li></ul>
+ 
+<p><img src="/favicon-1.png" align="right">
+</div>	
+
+<br><br><br><br><br>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+	
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  
+  var offset = $(':target').offset();
+var scrollto = offset.top - 60; // minus fixed header height
+$('html, body').animate({scrollTop:scrollto}, 0);
+  
+});
+  </script>
+
+    <footer class="footer bg-dark">
+      <div class="container">
+        <span class="text-muted">&copy; 2000-2026 3APA3A, Vladimir Dubrovin. Please contact <a class="tiny" href="mailto:3proxy@3proxy.ru">3proxy development team</a> if you want to contribute code or maintain port. 
+<br> design saw-friendship 2018</span>
+      </div>
+    </footer>
+	
+</body>
+</html>

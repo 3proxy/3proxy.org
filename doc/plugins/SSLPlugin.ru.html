@@ -1,0 +1,272 @@
+
+<html lang="ru">
+<head>
+<!--
+	OriginalURI=
+-->
+	<meta name="theme-color" content="#ffffff">
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/favicon.ico" type="type=image/x-icon">
+	<link rel="stylesheet" href="/style/bootstrap.min.css">
+	<script src="/js/jquery.min.js"></script>
+	<script src="/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" href="/style/main.css">
+        <title>
+3proxy : Documentation : SSLPlugin.ru	</title>
+
+	<meta name="Description" content="3proxy freeware proxy server for Windows and Unix. HTTP, SOCKS, FTP, POP3">
+	<meta name="keywords" content="3proxy, proxy, proxy server, free, freeware, socks, socks v5">
+
+<meta NAME="Author" content="3APA3A">
+</head>
+
+<body>
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="/"><span class="nav-logotext"><span class="nav-logotext1">3</span>&nbsp;&nbsp;PROXY</span></a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+		<ul class="navbar-nav">
+
+		  <li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Downloads
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+			<a class="dropdown-item" href="/download/">Downloads</a>
+			<a class="dropdown-item" href="/download/stable/">Stable version</a>
+			<a class="dropdown-item" href="/download/devel/">Development version</a>
+			<a class="dropdown-item" href="https://github.com/z3APA3A/3proxy">GIT</a>
+			<a class="dropdown-item" href="https://hub.docker.com/repository/docker/3proxy/3proxy">Docker</a>
+			</div>
+			</li>
+			<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Documentation
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/documents/">Documentation</a>
+				<a class="dropdown-item" href="/doc/">Manual</a>
+				<a class="dropdown-item" href="/howtoe.html">HowTo</a>
+				<a class="dropdown-item" href="/plugins/">Plugins</a>
+			</div>
+		  </li>
+			<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  About
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/">About</a>
+				<a class="dropdown-item" href="https://github.com/z3APA3A/3proxy/issues">Questions and issues</a>
+				<a class="dropdown-item" href="/donations/">Help the project</a>
+			</div>
+		  </li>
+
+		</ul>
+	</div>
+
+	<div class="lang-toogle nav navbar navbar-right navbar-dark bg-dark">
+		<a href="" lang="ru" id="lang-switch">RU</a><span>|</span><span lang="en">EN</span>
+	</div>
+	<script>document.getElementById('lang-switch').href='https://3proxy.ru'+location.pathname;</script>
+		
+</nav>
+
+<div class="container container-content">
+  <div class="info-block">
+	<div class="alert alert-warning">
+		<a href="#" class="close close-info-block" data-bs-dismiss="alert" aria-label="close">&times;</a>
+		<strong>
+
+ Few antiviral products inadequately detect 3proxy as Trojan.Daemonize,
+ Backdoor.Daemonize, etc and many detect 3proxy as a PUA (potentially unwanted program). 
+ It may cause browser warning on download page.
+ 3proxy is not trojan or backdoor and contains
+ no functionality except described in documentation. Clear explanation of this
+ fact is given, for example, in
+ <A class="tiny" HREF="https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Program:Win32/TinyProxy" target="_blank">Microsoft</A>'s
+ article.
+
+		</strong>
+	</div>
+	
+  </div>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+  
+  // info-block
+  
+	if (localStorage.getItem('show-info-block') == null) {
+		$('.info-block').show('slow');
+	} else {
+		$('.info-block').hide('slow');
+	}
+	
+	$('.close-info-block').on('click', function(){
+		localStorage.setItem('show-info-block', '0');
+	})
+  
+  // code highlighting
+	
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  
+  
+  
+});
+  </script><h3>3proxy SSL/TLS плагин</h3>
+
+Плагин можно использовать для перехвата и дешифровки SSL/TLS трафика, для шифрования трафика прокси-сервера и аутентификации с помощью клиентских сертификатов.
+
+<h4>Для прозрачного перехвата трафика (MITM):</h4>
+
+<br>ssl_mitm - подменять сертификаты для сервисов, запущенных ниже. Использование без ssl_client_verify небезопасно.
+<br>ssl_nomitm - не подменять сертификаты для сервисов, запущенных ниже.
+
+<h4>Для защиты трафика прокси-сервера (https:// proxy):</h4>
+
+ssl_serv (или ssl_server) - требовать TLS-соединение от клиентов для сервисов, запущенных ниже
+<br>ssl_noserv (или ssl_noserver) - не требовать TLS-соединение от клиентов для сервисов, запущенных ниже
+
+<h4>Для использования TLS при соединении к вышестоящему серверу:</h4>
+
+ssl_cli (или ssl_client) - устанавливать TLS-соединение к вышестоящему серверу для сервисов, запущенных ниже
+<br>ssl_nocli (или ssl_noclient) - не устанавливать TLS-соединение к вышестоящему серверу для сервисов, запущенных ниже
+
+<h4>Параметры:</h4>
+
+<br><b>ssl_server_cert</b> /path/to/cert - сертификат сервера (не должен быть самоподписанным, должен содержать альтернативные имена) для ssl_serv
+<br><b>ssl_server_key</b> /path/to/key - ключ сертификата сервера для ssl_server_cert или сгенерированного MITM-сертификата
+<br><b>ssl_client_cert</b> /path/to/cert - клиентский сертификат для аутентификации на вышестоящем сервере (используется с ssl_cli)
+<br><b>ssl_client_key</b> /path/to/key - ключ клиентского сертификата для ssl_client_cert
+<br><b>ssl_client_ciphersuites</b> ciphersuites_list - наборы шифров TLS для TLS 1.3 (клиент), пример: ssl_client_ciphersuites TLS_AES_128_GCM_SHA256
+<br><b>ssl_server_ciphersuites</b> ciphersuites_list - наборы шифров TLS для TLS 1.3 (сервер)
+<br><b>ssl_client_cipher_list</b> ciphers_list - наборы шифров TLS для TLS 1.2 и ниже (клиент), пример: ssl_client_cipher_list ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305
+<br><b>ssl_server_cipher_list</b> ciphers_list - наборы шифров TLS для TLS 1.2 и ниже (сервер)
+<br><b>ssl_client_min_proto_version</b> tls_version - минимальная версия TLS клиента (например, ssl_client_min_proto_version TLSv1.2)
+<br><b>ssl_server_min_proto_version</b> tls_version - минимальная версия TLS сервера
+<br><b>ssl_client_max_proto_version</b> tls_version - максимальная версия TLS клиента
+<br><b>ssl_server_max_proto_version</b> tls_version - максимальная версия TLS сервера
+<br><b>ssl_client_verify</b> - проверять сертификат вышестоящего сервера (используется с ssl_mitm или ssl_cli)
+<br><b>ssl_client_no_verify</b> - не проверять сертификат вышестоящего сервера (по умолчанию)
+<br><b>ssl_server_verify</b> - требовать клиентский сертификат (mTLS) для ssl_serv
+<br><b>ssl_server_no_verify</b> - не требовать клиентский сертификат (по умолчанию)
+<br><b>ssl_server_ca_file</b> /path/to/cafile - файл CA-сертификата для MITM
+<br><b>ssl_server_ca_key</b> /path/to/cakey - ключ CA-сертификата ssl_server_ca_file для MITM
+<br><b>ssl_server_ca_dir</b> /path/to/cadir - директория CA-сертификатов для ssl_server_verify
+<br><b>ssl_server_ca_store</b> /path/to/castore - хранилище CA-сертификатов для ssl_server_verify (OpenSSL 3.0+)
+<br><b>ssl_client_ca_file</b> /path/to/cafile - файл CA-сертификатов для ssl_client_verify
+<br><b>ssl_client_ca_dir</b> /path/to/cadir - директория CA-сертификатов для ssl_client_verify
+<br><b>ssl_client_ca_store</b> /path/to/castore - хранилище CA-сертификатов для ssl_client_verify (OpenSSL 3.0+)
+<br><b>ssl_client_sni</b> hostname - SNI-имя хоста для отправки вышестоящему серверу (переопределяет запрошенное имя хоста)
+<br><b>ssl_client_alpn</b> протокол1 протокол2 ... - ALPN-протоколы для согласования с вышестоящим сервером (например, ssl_client_alpn h2 http/1.1)
+<br><b>ssl_client_mode</b> режим - когда устанавливать TLS-соединение: 0 - при подключении (по умолчанию), 1 - после аутентификации, 2 - перед передачей данных, 3 - только для защищённых типов parent прокси (заканчивающихся на 's')
+<br><b>ssl_certcache</b> /path/to/cache/ - расположение кеша сгенерированных MITM-сертификатов. Кеш может содержать
+файлы 3proxy.pem, 3proxy.key, server.key, которые используются как ssl_server_ca_file,
+ssl_server_ca_key и ssl_server_key соответственно, если они не заданы. Если server.key не задан,
+3proxy.key используется для генерации серверного сертификата.
+
+<h4>Пример MITM:</h4>
+<pre>
+plugin /path/to/SSLPlugin.so ssl_plugin
+ssl_server_ca_file /path/to/cafile
+ssl_server_ca_key /path/to/cakey
+ssl_mitm
+proxy -p3128
+ssl_nomitm
+proxy -p3129
+</pre>
+Перехватывается трафик в прокси на порту 3128.
+
+<h4>Пример конфигурации https:// прокси:</h4>
+<pre>
+plugin /path/to/SSLPlugin.so ssl_plugin
+ssl_server_cert path_to_cert
+ssl_server_key path_to_key
+ssl_serv
+proxy -p33128
+ssl_noserv
+proxy -p3128
+</pre>
+На порту 33128 создается https:// прокси, на порту 3128 - http:// прокси.
+
+<h4>Пример TLS-клиента (соединение к вышестоящему серверу через TLS):</h4>
+<pre>
+plugin /path/to/SSLPlugin.so ssl_plugin
+ssl_client_cert /path/to/client.crt
+ssl_client_key /path/to/client.key
+ssl_client_verify
+ssl_client_ca_file /path/to/ca.crt
+ssl_cli
+proxy -p3128
+</pre>
+Создается HTTP-прокси, который соединяется с вышестоящими серверами через TLS с аутентификацией по клиентскому сертификату.
+
+<h4>Условное TLS для parent прокси (ssl_client_mode 3):</h4>
+<pre>
+plugin /path/to/SSLPlugin.so ssl_plugin
+ssl_server_cert /path/to/server.crt
+ssl_server_key /path/to/key
+ssl_client_mode 3
+
+auth strong
+allow user1
+parent 1000 https parent1.example.com 443
+allow user2
+parent 1000 socks5 parent2.example.com 1080
+ssl_serv
+ssl_cli
+proxy -p3128
+ssl_noserv
+ssl_nocli
+</pre>
+Создается HTTP-прокси на порту 3128, использующий TLS для клиентских соединений (ssl_serv). При ssl_client_mode 3 TLS-рукопожатие с родительским прокси выполняется только если тип parent прокси заканчивается на 's' (защищённые типы). В данном примере трафик user1 идёт через https родительский прокси с TLS-шифрованием, а трафик user2 — через обычный socks5 родитель без TLS. Защищённые типы parent прокси: tcps, https, connects, connect+s, socks4s, socks5s, socks4+s, socks5+s, pop3s, smtps, ftps.
+
+<h4>Пример mTLS (требование клиентского сертификата):</h4>
+<pre>
+plugin /path/to/SSLPlugin.so ssl_plugin
+ssl_server_cert /path/to/server.crt
+ssl_server_key /path/to/server.key
+ssl_server_ca_file /path/to/ca.crt
+ssl_server_verify
+ssl_serv
+proxy -p3128
+</pre>
+Создается https:// прокси, требующий аутентификацию по клиентскому сертификату.
+
+&copy; Vladimir Dubrovin, License: BSD style
+ 
+<p><img src="/favicon-1.png" align="right">
+</div>	
+
+<br><br><br><br><br>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+	
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  
+  var offset = $(':target').offset();
+var scrollto = offset.top - 60; // minus fixed header height
+$('html, body').animate({scrollTop:scrollto}, 0);
+  
+});
+  </script>
+
+    <footer class="footer bg-dark">
+      <div class="container">
+        <span class="text-muted">&copy; 2000-2026 3APA3A, Vladimir Dubrovin. Please contact <a class="tiny" href="mailto:3proxy@3proxy.ru">3proxy development team</a> if you want to contribute code or maintain port. 
+<br> design saw-friendship 2018</span>
+      </div>
+    </footer>
+	
+</body>
+</html>

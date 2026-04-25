@@ -1,6 +1,0 @@
-#define Title "3proxy SSL/TLS plugin"
-#include "../../include/intro.html"
-
-#include "../../../3proxy/doc/html/plugins/TransparentPlugin.html"
-
-#include "../../include/postpage.html"

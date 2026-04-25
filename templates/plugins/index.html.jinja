@@ -1,0 +1,46 @@
+{% set Title = "3proxy tiny free proxy server plugins, extensions and unsupported" %}
+{% include "../include/intro.html" %}
+
+<h2>3proxy server plugins, extensions and unsupported</h3>
+
+  <h4>3proxy plugins:</h4>
+	<ul>
+		<li><A HREF="TransparentPlugin/">3proxy transparent plugin (Linux)</A>
+		<font class="tiny">This plugin can be used to implement 3proxy transparently for client for any TCP-based protocols.
+		</font>
+		<li><A HREF="SSLPlugin/">3proxy SSL plugin</A>
+		<font class="tiny">This plugin can be used to decrypt and manupulate SSL/TLS traffic
+		</font>
+		<li><A HREF="PCREPlugin/">3proxy Perl Compatible Regular Expressions (PCRE) plugin</A>
+		<font class="tiny">This filtering plugin can be used to create matching and replace
+rules with regular expressions for client's request, client and
+servers header and client and server data.
+		</font>
+		<li><A HREF="WindowsAuthentication/">Windows authentication plugin</A> (Windows only)
+		<font class="tiny">
+			Performs user authentication using Windows system API.
+			Allows to specify Windows group to allow to use 3proxy.
+		</font>
+		<li><A HREF="TrafficPlugin/">Traffic correction plugin</A> (Windows only)
+		<font class="tiny">
+			Attempts to correct 3proxy traffic to count network/link level
+			headers to conform provider's billing system.
+		</font>
+		<li><A HREF="StringsPlugin/">Strings substitution plugin</A>
+		<font class="tiny">
+			Allows to change replies of HTTP proxy server
+		</font>
+	</ul>
+
+<p>
+Contributors:
+<ul>
+	<li>3APA3A, 3APA3A at 3proxy.ru, code developer
+	<li>Vladimir Dubrovin, vlad at 3proxy.ru, code developer
+	<li>Maslov Michael aka Flexx(rus), code developer (Traffic Plugin)
+	<li>Kirill Lopuchov, code developer (Strings Plugin)
+</ul>
+<p><font class="tiny">
+&copy; 2000-2026 by 3APA3A, Vladimir Dubrovin. Please contact <A class="tiny" HREF="mailto:3proxy@3proxy.ru">3proxy development team</A> if you want to contribute code or maintain port.
+</font>
+{% include "../include/postpage.html" %}

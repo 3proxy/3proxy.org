@@ -1,4 +1,0 @@
-#define Title "3proxy : Documentation : "
-#include "../include/intro.html"
-
-#include "../include/postpage.html"

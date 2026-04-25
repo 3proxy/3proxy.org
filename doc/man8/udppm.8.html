@@ -1,0 +1,376 @@
+
+<html lang="ru">
+<head>
+<!--
+	OriginalURI=
+-->
+	<meta name="theme-color" content="#ffffff">
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/favicon.ico" type="type=image/x-icon">
+	<link rel="stylesheet" href="/style/bootstrap.min.css">
+	<script src="/js/jquery.min.js"></script>
+	<script src="/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" href="/style/main.css">
+        <title>
+3proxy : Documentation : udppm.8	</title>
+
+	<meta name="Description" content="3proxy freeware proxy server for Windows and Unix. HTTP, SOCKS, FTP, POP3">
+	<meta name="keywords" content="3proxy, proxy, proxy server, free, freeware, socks, socks v5">
+
+<meta NAME="Author" content="3APA3A">
+</head>
+
+<body>
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="/"><span class="nav-logotext"><span class="nav-logotext1">3</span>&nbsp;&nbsp;PROXY</span></a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+		<ul class="navbar-nav">
+
+		  <li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Downloads
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+			<a class="dropdown-item" href="/download/">Downloads</a>
+			<a class="dropdown-item" href="/download/stable/">Stable version</a>
+			<a class="dropdown-item" href="/download/devel/">Development version</a>
+			<a class="dropdown-item" href="https://github.com/z3APA3A/3proxy">GIT</a>
+			<a class="dropdown-item" href="https://hub.docker.com/repository/docker/3proxy/3proxy">Docker</a>
+			</div>
+			</li>
+			<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Documentation
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/documents/">Documentation</a>
+				<a class="dropdown-item" href="/doc/">Manual</a>
+				<a class="dropdown-item" href="/howtoe.html">HowTo</a>
+				<a class="dropdown-item" href="/plugins/">Plugins</a>
+			</div>
+		  </li>
+			<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  About
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/">About</a>
+				<a class="dropdown-item" href="https://github.com/z3APA3A/3proxy/issues">Questions and issues</a>
+				<a class="dropdown-item" href="/donations/">Help the project</a>
+			</div>
+		  </li>
+
+		</ul>
+	</div>
+
+	<div class="lang-toogle nav navbar navbar-right navbar-dark bg-dark">
+		<a href="" lang="ru" id="lang-switch">RU</a><span>|</span><span lang="en">EN</span>
+	</div>
+	<script>document.getElementById('lang-switch').href='https://3proxy.ru'+location.pathname;</script>
+		
+</nav>
+
+<div class="container container-content">
+  <div class="info-block">
+	<div class="alert alert-warning">
+		<a href="#" class="close close-info-block" data-bs-dismiss="alert" aria-label="close">&times;</a>
+		<strong>
+
+ Few antiviral products inadequately detect 3proxy as Trojan.Daemonize,
+ Backdoor.Daemonize, etc and many detect 3proxy as a PUA (potentially unwanted program). 
+ It may cause browser warning on download page.
+ 3proxy is not trojan or backdoor and contains
+ no functionality except described in documentation. Clear explanation of this
+ fact is given, for example, in
+ <A class="tiny" HREF="https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Program:Win32/TinyProxy" target="_blank">Microsoft</A>'s
+ article.
+
+		</strong>
+	</div>
+	
+  </div>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+  
+  // info-block
+  
+	if (localStorage.getItem('show-info-block') == null) {
+		$('.info-block').show('slow');
+	} else {
+		$('.info-block').hide('slow');
+	}
+	
+	$('.close-info-block').on('click', function(){
+		localStorage.setItem('show-info-block', '0');
+	})
+  
+  // code highlighting
+	
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  
+  
+  
+});
+  </script><!-- Creator     : groff version 1.24.1 -->
+<html>
+<head>
+
+</head>
+<body>
+
+<h1 align="center">udppm</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#ARGUMENTS">ARGUMENTS</a><br>
+<a href="#CLIENTS">CLIENTS</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#AUTHORS">AUTHORS</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:6%; margin-top: 1em"><b>udppm</b> -
+UDP port mapper</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:6%; margin-top: 1em"><b>udppm</b>
+[<b>-ds</b>] [<b>-l</b>[[<i>@</i>]<i>logfile</i>]]
+[<b>-i</b><i>internal_ip</i>] [<b>-e</b><i>external_ip</i>]
+<i>local_port remote_host remote_port</i></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:6%; margin-top: 1em"><i><b>udppm</b></i>
+forwards datagrams from local to remote UDP port</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="6%"></td>
+<td width="3%">
+
+
+<p style="margin-top: 1em"><b>-I</b></p></td>
+<td width="6%"></td>
+<td width="85%">
+
+
+<p style="margin-top: 1em">Inetd mode. Standalone service
+only.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="6%"></td>
+<td width="3%">
+
+
+<p style="margin-top: 1em"><b>-d</b></p></td>
+<td width="6%"></td>
+<td width="85%">
+
+
+<p style="margin-top: 1em">Daemonize. Detach service from
+console and run in the background.</p></td></tr>
+<tr valign="top" align="left">
+<td width="6%"></td>
+<td width="3%">
+
+
+<p style="margin-top: 1em"><b>-t</b></p></td>
+<td width="6%"></td>
+<td width="85%">
+
+
+<p style="margin-top: 1em">Be silenT. Do not log
+start/stop/accept error records.</p></td></tr>
+<tr valign="top" align="left">
+<td width="6%"></td>
+<td width="3%">
+
+
+<p style="margin-top: 1em"><b>-e</b></p></td>
+<td width="6%"></td>
+<td width="85%">
+
+
+<p style="margin-top: 1em">External address. IP address of
+the interface the proxy should initiate datagrams from. By
+default, the system will decide which address to use in
+accordance with the routing table.</p></td></tr>
+<tr valign="top" align="left">
+<td width="6%"></td>
+<td width="3%">
+
+
+<p style="margin-top: 1em"><b>-i</b></p></td>
+<td width="6%"></td>
+<td width="85%">
+
+
+<p style="margin-top: 1em">Internal address. IP address the
+proxy accepts datagrams to. By default, connections to any
+interface are accepted. It&acute;s usually unsafe.</p></td></tr>
+<tr valign="top" align="left">
+<td width="6%"></td>
+<td width="3%">
+
+
+<p style="margin-top: 1em"><b>-l</b></p></td>
+<td width="6%"></td>
+<td width="85%">
+
+
+<p style="margin-top: 1em">Log. By default logging is to
+stdout. If <i>logfile</i> is specified logging is to file.
+Under Unix, if &acute;<i>@</i>&acute; precedes
+<i>logfile</i>, syslog is used for logging.</p></td></tr>
+<tr valign="top" align="left">
+<td width="6%"></td>
+<td width="3%">
+
+
+<p style="margin-top: 1em"><b>-s</b></p></td>
+<td width="6%"></td>
+<td width="85%">
+
+
+<p style="margin-top: 1em">Single packet. By default, only
+one client can use the udppm service, but if -s is
+specified, only one packet will be forwarded between client
+and server. This allows the service to be shared between
+multiple clients for single-packet services (for example,
+name lookups).</p></td></tr>
+<tr valign="top" align="left">
+<td width="6%"></td>
+<td width="3%">
+
+
+<p style="margin-top: 1em"><b>-S</b></p></td>
+<td width="6%"></td>
+<td width="85%">
+
+
+<p style="margin-top: 1em">Increase or decrease stack size.
+You may want to try something like -S8192 if you experience
+3proxy crashes.</p></td></tr>
+</table>
+
+<h2>ARGUMENTS
+<a name="ARGUMENTS"></a>
+</h2>
+
+
+
+<p style="margin-left:6%; margin-top: 1em"><i>local_port</i></p>
+
+<p style="margin-left:15%;">- port udppm accepts datagrams
+on</p>
+
+<p style="margin-left:6%;"><i>remote_host</i></p>
+
+<p style="margin-left:15%;">- IP address of the host
+datagrams are forwarded to</p>
+
+<p style="margin-left:6%;"><i>remote_port</i></p>
+
+<p style="margin-left:15%;">- remote port datagrams are
+forwarded to</p>
+
+<h2>CLIENTS
+<a name="CLIENTS"></a>
+</h2>
+
+
+<p style="margin-left:6%; margin-top: 1em">Any UDP-based
+application can be used as a client. Use <i>internal_ip</i>
+and <i>local_port</i> as the destination in the client
+application. All datagrams are forwarded to
+<i>remote_host</i>:<i>remote_port</i></p>
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<p style="margin-left:6%; margin-top: 1em">Report all bugs
+to <b>3proxy@3proxy.org</b></p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+<p style="margin-left:6%; margin-top: 1em">3proxy(8),
+proxy(8), ftppr(8), socks(8), pop3p(8), udppm(8),
+syslogd(8), <br>
+https://3proxy.org/</p>
+
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+
+
+<p style="margin-left:6%; margin-top: 1em">3proxy is
+designed by Vladimir 3APA3A Dubrovin
+(<i>3proxy@3proxy.org</i>)</p>
+<hr>
+</body>
+</html>
+ 
+<p><img src="/favicon-1.png" align="right">
+</div>	
+
+<br><br><br><br><br>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+	
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  
+  var offset = $(':target').offset();
+var scrollto = offset.top - 60; // minus fixed header height
+$('html, body').animate({scrollTop:scrollto}, 0);
+  
+});
+  </script>
+
+    <footer class="footer bg-dark">
+      <div class="container">
+        <span class="text-muted">&copy; 2000-2026 3APA3A, Vladimir Dubrovin. Please contact <a class="tiny" href="mailto:3proxy@3proxy.ru">3proxy development team</a> if you want to contribute code or maintain port. 
+<br> design saw-friendship 2018</span>
+      </div>
+    </footer>
+	
+</body>
+</html>

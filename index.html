@@ -1,0 +1,268 @@
+
+<html lang="ru">
+<head>
+<!--
+	OriginalURI=
+-->
+	<meta name="theme-color" content="#ffffff">
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/favicon.ico" type="type=image/x-icon">
+	<link rel="stylesheet" href="/style/bootstrap.min.css">
+	<script src="/js/jquery.min.js"></script>
+	<script src="/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" href="/style/main.css">
+        <title>
+3proxy tiny free proxy server for Windows, Linux, Unix: SOCKS, HTTP, FTP proxy	</title>
+
+	<meta name="Description" content="3proxy freeware proxy server for Windows and Unix. HTTP, SOCKS, FTP, POP3">
+	<meta name="keywords" content="3proxy, proxy, proxy server, free, freeware, socks, socks v5">
+
+<meta NAME="Author" content="3APA3A">
+</head>
+
+<body>
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="/"><span class="nav-logotext"><span class="nav-logotext1">3</span>&nbsp;&nbsp;PROXY</span></a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+		<ul class="navbar-nav">
+
+		  <li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Downloads
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+			<a class="dropdown-item" href="/download/">Downloads</a>
+			<a class="dropdown-item" href="/download/stable/">Stable version</a>
+			<a class="dropdown-item" href="/download/devel/">Development version</a>
+			<a class="dropdown-item" href="https://github.com/z3APA3A/3proxy">GIT</a>
+			<a class="dropdown-item" href="https://hub.docker.com/repository/docker/3proxy/3proxy">Docker</a>
+			</div>
+			</li>
+			<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Documentation
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/documents/">Documentation</a>
+				<a class="dropdown-item" href="/doc/">Manual</a>
+				<a class="dropdown-item" href="/howtoe.html">HowTo</a>
+				<a class="dropdown-item" href="/plugins/">Plugins</a>
+			</div>
+		  </li>
+			<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  About
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/">About</a>
+				<a class="dropdown-item" href="https://github.com/z3APA3A/3proxy/issues">Questions and issues</a>
+				<a class="dropdown-item" href="/donations/">Help the project</a>
+			</div>
+		  </li>
+
+		</ul>
+	</div>
+
+	<div class="lang-toogle nav navbar navbar-right navbar-dark bg-dark">
+		<a href="" lang="ru" id="lang-switch">RU</a><span>|</span><span lang="en">EN</span>
+	</div>
+	<script>document.getElementById('lang-switch').href='https://3proxy.ru'+location.pathname;</script>
+		
+</nav>
+
+<div class="container container-content">
+  <div class="info-block">
+	<div class="alert alert-warning">
+		<a href="#" class="close close-info-block" data-bs-dismiss="alert" aria-label="close">&times;</a>
+		<strong>
+
+ Few antiviral products inadequately detect 3proxy as Trojan.Daemonize,
+ Backdoor.Daemonize, etc and many detect 3proxy as a PUA (potentially unwanted program). 
+ It may cause browser warning on download page.
+ 3proxy is not trojan or backdoor and contains
+ no functionality except described in documentation. Clear explanation of this
+ fact is given, for example, in
+ <A class="tiny" HREF="https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Program:Win32/TinyProxy" target="_blank">Microsoft</A>'s
+ article.
+
+		</strong>
+	</div>
+	
+  </div>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+  
+  // info-block
+  
+	if (localStorage.getItem('show-info-block') == null) {
+		$('.info-block').show('slow');
+	} else {
+		$('.info-block').hide('slow');
+	}
+	
+	$('.close-info-block').on('click', function(){
+		localStorage.setItem('show-info-block', '0');
+	})
+  
+  // code highlighting
+	
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  
+  
+  
+});
+  </script> <h2>3proxy tiny free proxy server</h2>
+
+<br>
+
+<table border="1">
+<tr><td>Hot news:</td><td bgcolor="white">
+	<a href="//3proxy.ru/download/">3proxy 0.9.6</a> Released April, 11 2026.
+</td></tr><tr><td colspan="2" bgcolor="white">
+<b>0.9.6</b>
+<p>
+<br>+ ssl_client and multiple configuration options added to SSLPlugin, SSLPlugin code significantly improved and bugfixed. See https://github.com/3proxy/3proxy/wiki/SSLPlugin. 3proxy can now be used as stunnel replacement for many scenarios.
+<br>+ HAProxy proxy protocol v1 support as client and server, add -H option for service to expect HA proxy v1 protocol header, use ha parent type: parent 1000 ha 0.0.0.0 0 to send v1 header.
+<br>+ tlspr is supported in auto
+<br>+ tlspr supports -s option, it breaks HELLO packet to prevent some DPIs from detecting SNI
+<br>+ maxseg configuration option and TCP_MAXSEG socket flag support added. It sets maximum size of TCP segment to fix PathMTU discovery problems
+<br>+ -Ne / -Ni options added to specify external / internal NAT address for SOCKSv5
+<br>+ cmake environment added
+<br>! External pcre2 (pcre2-8) library is used for PCRE, pcre code is removed from 3proxy
+<br>! Multiple minor bugfixes%   
+<p>
+<b>0.9.5</b>
+<p>!!Security fix: proxy can potentially crash on on some platforms due to overlapping regions in strcpy()
+<br>+ new proxy service type: tlspr - SNI proxy, may also be used as parent tls type, sniffs hostname from TLS handhake, <a href="/doc/man8/tlspr.8.html">read more</a>
+<br>+    new proxy service type: auto - autodetect proxy type between proxy and socks
+<br>+    SSLPlugin is rewritten, production-ready, supports TLS (SSL) server (may be used to create https:// type proxy), certificates checks and cypher options, <a href="/plugins/SSLPlugin/">read more</a>
+<br>+    -g option is added for grace delay to reduce CPU load, <a href="/highload.html">read more</a>
+<br>! Multiple minor bugfixes
+<br>! More supported sockets options
+
+<p>
+<b>0.9.4</b>
+<p>! Fix: invalid handling of '-' character in ACL hostname
+<br>! Fix: minor bugfixes and improvements
+<br>+ parentretry command added (defaults to 2) to retry connections to parent proxies
+<br>- icqpr related code (OSCAR proxy) removed, due to drop of OSCAR support by messengers
+<p>
+
+<b>0.9.3</b>
+<p>
+Bugfixes:
+<br>Fixed: systemd description file (proxy may fail to start after reboot or via systemctl)
+<br>Fixed: group/account creation in installation scripts
+<br>Fixed: countall/nocounall do not work in some configurations
+<br>Fixed: counters do not work if counter file is not specified
+<br>Fixed: counters without rotation (type N) are incorrectly shown in web admin interface
+<br>Fixed: %n may be incomplete or missed in long log records
+<br>Fixed: connect back functionality does not work
+<br>
+<br>Improvements:
+<br>+ Docker builds
+<p>
+<b>0.9.2</b>
+<p>
+Bugfixes:
+<br>Fixed: bandwidth limiters (once again)
+<br>Fixed: data filtering plugins (PCREPlugin, SSLPlugin). SSLPlugin use on Linux requires to disable splice (-s0)
+<br>FIxed: standalone proxies do not react on HUP (Ctrl+C) in Linux/Unix
+<br>Fixed: few minor bugs
+<br>
+<br>Improvements:
+<br>+ deb for arm platforms (experimental)
+<br>+ Openssl 1.1 support for SSLPlugin
+<p>
+<b>0.9.1 - bugfix release</b>
+<p>
+Bugfixes:
+<br>Fixed: socket may be closed before all data received/sent
+<br>Fixed: bandlimin non-working
+<br>Fixed: countall/nocountall
+<br>Fixed: few race conditions
+<p>
+0.9 intoduces socket options including interface binding for Linux, connection limits and connection ratelimits, user session binding to IP,
+zero-copy mode for Linux, multiple IPv6 improvements, preliminary RADIUS support, ARM support for Windows. 
+It's recommended to update to 0.9 branch from any older versions.
+<p>
+0.9 now is a stable branch, 10 is a development branch, security-related fixes will be backported to 0.8 branch.
+<p>
+ Download: <a href="//3proxy.ru/download/">http://3proxy.ru/download/</a>
+</td></tr>
+</table>
+
+	3Proxy tiny free proxy server is really tiny cross-platform
+	(Win32/Win64&Unix) freeware proxy servers set. It includes HTTP proxy with HTTPS
+	and FTP support, SOCKSv4/SOCKSv4.5/SOCKSv5 proxy (socks/socks.exe), POP3 proxy,
+	SMTP proxy, AIM/ICQ proxy (icqpr/icqpr.exe), MSN messenger / Live messenger
+	proxy (msnpr/msnpr.exe),
+	FTP proxy, caching DNS proxy, TCP and UDP portmappers.
+
+<p>	You can use every proxy as a standalone program (socks, proxy, tcppm,
+	udppm, pop3p) or use combined program (3proxy). Combined proxy
+	additionally supports features like access control, bandwidth limiting,
+	limiting daily/weekly/monthly traffic amount,
+	proxy chaining, log rotation, syslog and ODBC logging, etc.
+
+<p>	It's created to be small, simple and yet very functional.
+
+<p>	It may be compiled with Visual C or gcc. Native Win32/Win64 versions included
+	in archive and supports installation as a service. Currently
+	3proxy is tested to work under Windows since 98 (Windows before Vista reqires lite version) and up to latest version both i386 and x64,
+	FreeBSD/i386/x64, NetBSD/i386/x64, OpenBSD/i386/x64, Linux/i386/x64/PPC/Alpha/arm, Mac OS X, Solaris/i386/x64.
+
+<p>	3proxy is absolutely free (FreeWare) and open source. It can be used
+	under terms of GNU/GPL. Starting from 0.6 version BSD-style license is used and
+	any compatible license (Apache license, GPL, LGPL) may be used instead.
+
+<p>	For licensing or commercial support questions please e-mail to
+	<A HREF="mailto:3proxy@3proxy.ru" class="tiny">3proxy@3proxy.ru</A>
+	<br>.
+
+<p>
+Contributors:
+<ul>
+	<li>3APA3A, 3APA3A at 3proxy.ru, code developer
+	<li>Vladimir Dubrovin, vlad at securityvulns.ru, code developer
+</ul>
+<p>
+
+ 
+<p><img src="/favicon-1.png" align="right">
+</div>	
+
+<br><br><br><br><br>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+	
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  
+  var offset = $(':target').offset();
+var scrollto = offset.top - 60; // minus fixed header height
+$('html, body').animate({scrollTop:scrollto}, 0);
+  
+});
+  </script>
+
+    <footer class="footer bg-dark">
+      <div class="container">
+        <span class="text-muted">&copy; 2000-2026 3APA3A, Vladimir Dubrovin. Please contact <a class="tiny" href="mailto:3proxy@3proxy.ru">3proxy development team</a> if you want to contribute code or maintain port. 
+<br> design saw-friendship 2018</span>
+      </div>
+    </footer>
+	
+</body>
+</html>
